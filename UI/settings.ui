@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>MainWindow</class>
+    <widget class="QMainWindow" name="MainWindow">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>960</width>
+                <height>540</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>Settings</string>
+        </property>
+        <widget class="QWidget" name="centralwidget">
+            <widget class="QPushButton" name="backButton">
+                <property name="geometry">
+                    <rect>
+                        <x>0</x>
+                        <y>0</y>
+                        <width>271</width>
+                        <height>61</height>
+                    </rect>
+                </property>
+                <property name="font">
+                    <font>
+                        <pointsize>24</pointsize>
+                    </font>
+                </property>
+                <property name="text">
+                    <string>&lt;----- Back</string>
+                </property>
+            </widget>
+            <widget class="QWidget" name="gridLayoutWidget">
+                <property name="geometry">
+                    <rect>
+                        <x>270</x>
+                        <y>60</y>
+                        <width>691</width>
+                        <height>451</height>
+                    </rect>
+                </property>
+                <layout class="QGridLayout" name="gridLayout">
+                    <item row="1" column="0">
+                        <widget class="QRadioButton" name="radiopve">
+                            <property name="font">
+                                <font>
+                                    <pointsize>24</pointsize>
+                                </font>
+                            </property>
+                            <property name="text">
+                                <string>PVE</string>
+                            </property>
+                            <property name="checked">
+                                <bool>false</bool>
+                            </property>
+                        </widget>
+                    </item>
+                    <item row="3" column="0">
+                        <widget class="QComboBox" name="comboBox">
+                            <property name="font">
+                                <font>
+                                    <pointsize>24</pointsize>
+                                </font>
+                            </property>
+                            <item>
+                                <property name="text">
+                                    <string>ENGLISH</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>RUSSIAN</string>
+                                </property>
+                            </item>
+                        </widget>
+                    </item>
+                    <item row="4" column="0">
+                        <widget class="QPushButton" name="saveButton">
+                            <property name="font">
+                                <font>
+                                    <pointsize>36</pointsize>
+                                    <weight>75</weight>
+                                    <italic>false</italic>
+                                    <bold>true</bold>
+                                </font>
+                            </property>
+                            <property name="text">
+                                <string>SAVE</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item row="0" column="0">
+                        <widget class="QRadioButton" name="radiopvp">
+                            <property name="font">
+                                <font>
+                                    <pointsize>24</pointsize>
+                                </font>
+                            </property>
+                            <property name="text">
+                                <string>PVP</string>
+                            </property>
+                            <property name="checked">
+                                <bool>true</bool>
+                            </property>
+                        </widget>
+                    </item>
+                </layout>
+            </widget>
+            <widget class="QVideoWidget" name="videoSettings" native="true">
+                <property name="geometry">
+                    <rect>
+                        <x>0</x>
+                        <y>60</y>
+                        <width>271</width>
+                        <height>451</height>
+                    </rect>
+                </property>
+            </widget>
+            <widget class="QLabel" name="logoImage">
+                <property name="geometry">
+                    <rect>
+                        <x>270</x>
+                        <y>0</y>
+                        <width>691</width>
+                        <height>61</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string/>
+                </property>
+            </widget>
+        </widget>
+        <widget class="QMenuBar" name="menubar">
+            <property name="geometry">
+                <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>960</width>
+                    <height>26</height>
+                </rect>
+            </property>
+        </widget>
+    </widget>
+    <customwidgets>
+        <customwidget>
+            <class>QVideoWidget</class>
+            <extends>QWidget</extends>
+            <header>PyQt5.QtMultimediaWidgets</header>
+            <container>1</container>
+        </customwidget>
+    </customwidgets>
+    <resources/>
+    <connections/>
+</ui>

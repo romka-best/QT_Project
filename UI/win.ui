@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>MainWindow</class>
+    <widget class="QMainWindow" name="MainWindow">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>960</width>
+                <height>540</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>WIN</string>
+        </property>
+        <widget class="QWidget" name="centralwidget">
+            <widget class="QLabel" name="label">
+                <property name="geometry">
+                    <rect>
+                        <x>100</x>
+                        <y>180</y>
+                        <width>760</width>
+                        <height>131</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string/>
+                </property>
+            </widget>
+            <widget class="QVideoWidget" name="widget" native="true">
+                <property name="geometry">
+                    <rect>
+                        <x>230</x>
+                        <y>0</y>
+                        <width>510</width>
+                        <height>100</height>
+                    </rect>
+                </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton">
+                <property name="geometry">
+                    <rect>
+                        <x>230</x>
+                        <y>320</y>
+                        <width>510</width>
+                        <height>100</height>
+                    </rect>
+                </property>
+                <property name="font">
+                    <font>
+                        <pointsize>24</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                    </font>
+                </property>
+                <property name="text">
+                    <string>Back to start</string>
+                </property>
+            </widget>
+        </widget>
+    </widget>
+    <customwidgets>
+        <customwidget>
+            <class>QVideoWidget</class>
+            <extends>QWidget</extends>
+            <header>PyQt5.QtMultimediaWidgets</header>
+            <container>1</container>
+        </customwidget>
+    </customwidgets>
+    <resources/>
+    <connections/>
+</ui>
