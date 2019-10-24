@@ -1,3 +1,2 @@
-lst = []
-lst[0][0] = 1
-print(lst)
+a = {"1": 0}
+print(a["o"])

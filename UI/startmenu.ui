@@ -85,9 +85,9 @@
             <widget class="QVideoWidget" name="videoStartMenu" native="true">
                 <property name="geometry">
                     <rect>
-                        <x>100</x>
+                        <x>0</x>
                         <y>0</y>
-                        <width>761</width>
+                        <width>961</width>
                         <height>100</height>
                     </rect>
                 </property>

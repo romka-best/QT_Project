@@ -120,7 +120,7 @@ players = []
 Отстутствуют некоторые изображения
 Отстутствует презентация
 Код не оптимизирован
-Проект готов на 61%"""
+Проект готов на 70%"""
 
 
 class Ui_MainWindow_loading(object):  # loading.py start
@@ -328,9 +328,9 @@ class Ui_MainWindow_rules(object):  # rules.py
         self.logoImage.setText("")
         self.logoImage.setObjectName("logoImage")
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(270, 60, 691, 451))
+        self.label.setGeometry(QtCore.QRect(0, 60, 961, 451))
         font = QtGui.QFont()
-        font.setPointSize(24)
+        font.setPointSize(12)
         self.label.setFont(font)
         self.label.setText("")
         self.label.setObjectName("label")
@@ -879,12 +879,20 @@ class Startmenu_Main(QMainWindow, Ui_MainWindow_startmenu):  # Нужно вст
     def __init__(self, parent=None):
         super(Startmenu_Main, self).__init__(parent)
         self.setupUi(self)
+
+        self.LOGOBP = QPixmap("images/logobp.svg")
+        self.imageleft = QPixmap('images/Esminec_red.svg')
+        # self.imageright = QPixmap('images/')
+
         self.initUI()
 
     def initUI(self):
-        self.LOGOBP = QPixmap("images/logobp.svg")
         self.logoImage1.setPixmap(self.LOGOBP)
         self.logoImage2.setPixmap(self.LOGOBP)
+        self.imageleft = self.imageleft.scaled(200, 240)
+        # self.imageright = self.imageright.scaled(200, 240)
+        self.image1.setPixmap(self.imageleft)
+        # self.image2.setPixmap(self.imageright)
 
         self.startButton.setStyleSheet("color: white; background-color: #082567; border-radius: 20px;")
         self.rulesButton.setStyleSheet("color: white; background-color: #082567; border-radius: 20px;")
@@ -934,15 +942,35 @@ class Settings_Main(QMainWindow, Ui_MainWindow_settings):  # Доработат�
         radioButton = self.sender().text()
 
 
-class Rules_Main(QMainWindow, Ui_MainWindow_rules):  # Дописать текст и вставить картинку!
+class Rules_Main(QMainWindow, Ui_MainWindow_rules):
     def __init__(self, parent=None):
         super(Rules_Main, self).__init__(parent)
         self.setupUi(self)
+        self.LOGOSB = QPixmap("images/logosb.svg")
         self.initUI()
 
     def initUI(self):
-        self.backButton.setStyleSheet("color: white; background-color: #000080")
+        self.backButton.setStyleSheet("color: white; background-color: #082567; border-radius: 20px;")
         self.backButton.clicked.connect(self.to_start)
+
+        self.logoImage.setPixmap(self.LOGOSB)
+        self.label.setText("""The game is played on four grids, two for each player.
+        The grids are typically square – usually 10×10 – and the individual squares 
+        in the grid are identified by letter and number.
+        
+        On one grid the player arranges ships and records the shots by the opponent.
+        
+        On the other grid the player records their own shots.
+        
+        Before play begins, each player secretly arranges their ships on their primary grid.
+        
+        Each ship occupies a number of consecutive squares on the grid,
+        arranged either horizontally or vertically.
+        
+        The number of squares for each ship is determined by the type of the ship.
+        
+        The ships cannot overlap (i.e., only one ship can occupy any given square in the grid).
+        The types and numbers of ships allowed are the same for each player.""")
 
     def to_start(self):
         windows.setCurrentIndex(1)
@@ -955,12 +983,12 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Дописать!
 
         self.map = SeaMap(self.boardMap)
         self.new_count()
+        self.new_map()
+        # self.new_images('green')
 
         self.initUI()
 
     def initUI(self):
-        self.new_map()
-
         self.readyButton.clicked.connect(self.start)
         self.readyButton.setStyleSheet("color: white; background-color: #082567; border-radius: 10px;")
         self.linkorButton.setStyleSheet("color: white; background-color: #082567; border-radius: 10px;")
@@ -990,18 +1018,38 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Дописать!
                          WHERE id={int(i[1:])}""")
         self.con.commit()
 
+    def new_images(self, who):
+        self.pixmap_linkor = QPixmap(f"images/Linkor_{who}.svg")
+        self.pixmap_kreyser = QPixmap(f"images/Kreyser_{who}.svg")
+        self.pixmap_esminec = QPixmap(f"images/Esminec_{who}.svg")
+        # self.pixmap_torped = QPixmap(f"images/Torped_{who}.svg")
+
+        self.pixmap_linkor = self.pixmap_linkor.scaled(259, 110)
+        self.pixmap_kreyser = self.pixmap_kreyser.scaled(260, 110)
+        self.pixmap_esminec = self.pixmap_esminec.scaled(260, 110)
+        # self.pixmap_torped = self.pixmap_torped.scaled(260, 110)
+
+        self.linkorImage.setPixmap(self.pixmap_linkor)
+        self.kreyserImage.setPixmap(self.pixmap_kreyser)
+        self.esminecImage.setPixmap(self.pixmap_esminec)
+        # self.torpedImage.setPixmap(self.pixmap_torped)
+
     def start(self):
+        if self.countL != 0 or self.countK != 0 or self.countE != 0 or self.countT != 0:
+            self.error("You haven't set all the ships")
+            return
         if self.sender().text() == 'I am ready':
             self.new_db("Player1")
-            players.append(Player('First', self.boardMap))
+            players.append(Player('Player1', self.boardMap))
             self.readyButton.setText("I am ready too")
             self.playerLabel.setText("PLAYER 2")
             self.new_count()
             self.boardMap.clear()
             self.new_map()
+            self.new_images('red')
         else:
             self.new_db("Player2")
-            players.append(Player('Second', self.boardMap))
+            players.append(Player('Player2', self.boardMap))
             windows.setCurrentIndex(5)
 
     def new_count(self):
@@ -1010,6 +1058,18 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Дописать!
         self.countE = 3
         self.countT = 4
 
+    def coords_is_right(self, new_coords, num, mode='dual'):
+        if mode != 'v':
+            return (COORDS[new_coords[1]][0] - COORDS[new_coords[0]][0] == 0 and
+                    COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == num) or \
+                   (COORDS[new_coords[1]][0] - COORDS[new_coords[0]][0] == num and
+                    COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == 0)
+        return COORDS[new_coords[1]][0] - COORDS[new_coords[0]][0] == num and \
+               COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == 0
+
+    def error(self, text="You entered the coordinates incorrectly."):
+        QMessageBox.critical(self, 'ERROR!', text)
+
     def setLinkor(self):
         coords, ok = QInputDialog.getText(self, f'{self.countL} left', 'Enter coords for Linkor:\n'
                                                                        'Example: A1-D1')
@@ -1017,17 +1077,13 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Дописать!
             try:
                 error = False
                 new_coords = coords.split('-')
-                if (COORDS[new_coords[1]][0] - COORDS[new_coords[0]][0] == 0 and
-                    COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == 3) or \
-                        (COORDS[new_coords[1]][0] - COORDS[new_coords[0]][0] == 3 and
-                         COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == 0):
-                    if COORDS[new_coords[1]][0] - COORDS[new_coords[0]][0] == 3 and \
-                            COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == 0:
+                if self.coords_is_right(new_coords, 3):
+                    if self.coords_is_right(new_coords, 3, 'v'):
                         vertical = True
                     else:
                         vertical = False
+                    c1, c2 = COORDS[new_coords[0]][0], COORDS[new_coords[0]][1]
                     for i in range(4):
-                        c1, c2 = COORDS[new_coords[0]][0], COORDS[new_coords[0]][1]
                         if not vertical:
                             if str(self.boardMap.item(c1, c2 + i).text()) == "*" or \
                                     str(self.boardMap.item(c1, c2 + i).text()) == "X":
@@ -1046,10 +1102,12 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Дописать!
                                 self.map.shoot(c1 + i, c2, 'sink')
                     if not error:
                         self.countL -= 1
+                else:
+                    self.error()
             except BaseException:
-                QMessageBox.critical(self, 'ERROR!', "You entered the coordinates incorrectly.")
+                self.error()
         elif self.countL == 0:
-            QMessageBox.critical(self, "ERROR!", "Ships ended")
+            self.error("Ships ended")
 
     def setKreyser(self):
         coords, ok = QInputDialog.getText(self, f'{self.countK} left', 'Enter coords for Kreyser:\n'
@@ -1058,17 +1116,13 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Дописать!
             try:
                 error = False
                 new_coords = coords.split('-')
-                if COORDS[new_coords[1]][0] - COORDS[new_coords[0]][0] == 0 and \
-                        COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == 2 or \
-                        (COORDS[new_coords[1]][0] - COORDS[new_coords[0]][0] == 2 and
-                         COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == 0):
-                    if COORDS[new_coords[1]][0] - COORDS[new_coords[0]][0] == 2 and \
-                            COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == 0:
+                if self.coords_is_right(new_coords, 2):
+                    if self.coords_is_right(new_coords, 2, 'v'):
                         vertical = True
                     else:
                         vertical = False
+                    c1, c2 = COORDS[new_coords[0]][0], COORDS[new_coords[0]][1]
                     for i in range(3):
-                        c1, c2 = COORDS[new_coords[0]][0], COORDS[new_coords[0]][1]
                         if not vertical:
                             if str(self.boardMap.item(c1, c2 + i).text()) == "*" or \
                                     str(self.boardMap.item(c1, c2 + i).text()) == "X":
@@ -1087,10 +1141,12 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Дописать!
                                 self.map.shoot(c1 + i, c2, 'sink')
                     if not error:
                         self.countK -= 1
+                else:
+                    self.error()
             except BaseException:
-                QMessageBox.critical(self, 'ERROR!', "You entered the coordinates incorrectly.")
+                self.error()
         elif self.countK == 0:
-            QMessageBox.critical(self, "ERROR!", "Ships ended")
+            self.error("Ships ended")
 
     def setEsminec(self):
         coords, ok = QInputDialog.getText(self, f'{self.countE} left', 'Enter coords for Esminec:\n'
@@ -1099,17 +1155,13 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Дописать!
             try:
                 error = False
                 new_coords = coords.split('-')
-                if COORDS[new_coords[1]][0] - COORDS[new_coords[0]][0] == 0 and \
-                        COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == 1 or \
-                        (COORDS[new_coords[1]][0] - COORDS[new_coords[0]][0] == 1 and
-                         COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == 0):
-                    if COORDS[new_coords[1]][0] - COORDS[new_coords[0]][0] == 1 and \
-                            COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == 0:
+                if self.coords_is_right(new_coords, 1):
+                    if self.coords_is_right(new_coords, 1, 'v'):
                         vertical = True
                     else:
                         vertical = False
+                    c1, c2 = COORDS[new_coords[0]][0], COORDS[new_coords[0]][1]
                     for i in range(2):
-                        c1, c2 = COORDS[new_coords[0]][0], COORDS[new_coords[0]][1]
                         if not vertical:
                             if str(self.boardMap.item(c1, c2 + i).text()) == "*" or \
                                     str(self.boardMap.item(c1, c2 + i).text()) == "X":
@@ -1128,13 +1180,15 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Дописать!
                                 self.map.shoot(c1 + i, c2, 'sink')
                     if not error:
                         self.countE -= 1
+                else:
+                    self.error()
             except BaseException:
-                QMessageBox.critical(self, 'ERROR!', "You entered the coordinates incorrectly.")
+                self.error()
         elif self.countE == 0:
-            QMessageBox.critical(self, "ERROR!", "Ships ended")
+            self.error("Ships ended")
 
     def setTorped(self):
-        coords, ok = QInputDialog.getText(self, f'{self.countT} left', 'Enter coords for Torped:\n'
+        coords, ok = QInputDialog.getText(self, f'{self.countT} left', 'Enter coord for Torped:\n'
                                                                        'Example: A7')
         if ok and self.countT != 0:
             try:
@@ -1142,10 +1196,12 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Дописать!
                     self.boardMap.setItem(*COORDS[coords], QTableWidgetItem("X"))
                     self.map.shoot(*COORDS[coords], 'sink')
                     self.countT -= 1
+                else:
+                    self.error()
             except BaseException:
-                QMessageBox.critical(self, 'ERROR!', "You entered the coordinates incorrectly.")
+                self.error()
         elif self.countT == 0:
-            QMessageBox.critical(self, "ERROR!", "Ships ended")
+            self.error("Ships ended")
 
 
 class PVP_Main(QMainWindow, Ui_MainWindow_pvp):  # дописать!
@@ -1159,15 +1215,40 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):  # дописать!
         self.pixmap_enemy_red = QPixmap("images/enemys_board_red.svg")
         self.pixmap_vs = QPixmap("images/vs.svg")
 
-        self.board1Label.setPixmap(self.pixmap_your_green)
-        self.board2Label.setPixmap(self.pixmap_enemy_red)
-        self.vsLable.setPixmap(self.pixmap_vs)
-        self.courseButton.setStyleSheet("color: white; background-color: #082567;")
+        self.turn = "Player1"
+        self.change_of_course()
 
         self.initUI()
 
     def initUI(self):
-        pass
+        self.courseButton.clicked.connect(self.course)
+
+        self.vsLable.setPixmap(self.pixmap_vs)
+        self.courseButton.setStyleSheet("color: white; background-color: #082567;")
+
+    def change_of_course(self):
+        if self.turn == "Player1":
+            self.board1Label.setPixmap(self.pixmap_your_green)
+            self.board2Label.setPixmap(self.pixmap_enemy_red)
+            self.turn = "Player2"
+        elif self.turn == "Player2":
+            self.board2Label.setPixmap(self.pixmap_your_green)
+            self.board1Label.setPixmap(self.pixmap_enemy_red)
+            self.turn = "Player1"
+
+    def info(self, text="Your coord is right"):
+        QMessageBox.information(self, "INFO", text)
+
+    def course(self):
+        coord, ok = QInputDialog.getText(self, f'Course: {self.turn}', 'Enter coord:\n'
+                                                                       'Example: A7')
+        try:
+            if COORDS[coord]:
+                self.info()
+        except KeyError:  # изменить
+            QMessageBox.critical(self, "ERROR", "Your coord isn't right")
+        else:
+            pass
 
 
 class Win_Main(QMainWindow, Ui_MainWindow_win):  # Дописать
@@ -1249,6 +1330,7 @@ if __name__ == '__main__':  # Дописать
     windows.addWidget(win_window)  # 6
 
     windows.setWindowTitle("SEA BATTLE")
+    windows.setWindowIcon(QIcon("images/icon.svg"))
     windows.resize(*SCREEN_SIZE[0])
     windows.show()
     sys.exit(app.exec())
