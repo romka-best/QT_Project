@@ -2,11 +2,10 @@ import sys
 
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow, \
-    QStackedWidget, QPushButton, QColorDialog, QProgressBar, \
-    QMessageBox, QInputDialog, QTableWidget, QTableWidgetItem
+    QStackedWidget, QMessageBox, QInputDialog, QTableWidgetItem
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtMultimediaWidgets import QVideoWidget
-from PyQt5.QtCore import Qt, QBasicTimer, QCoreApplication
+from PyQt5.QtCore import QBasicTimer, QCoreApplication
 from random import randrange
 import sqlite3
 
@@ -120,7 +119,7 @@ players = []
 Отстутствуют некоторые изображения
 Отстутствует презентация
 Код не оптимизирован
-Проект готов на 70%"""
+Проект готов на 73%"""
 
 
 class Ui_MainWindow_loading(object):  # loading.py start
@@ -976,7 +975,7 @@ class Rules_Main(QMainWindow, Ui_MainWindow_rules):
         windows.setCurrentIndex(1)
 
 
-class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Дописать!
+class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изображения, оптимизировать код
     def __init__(self, parent=None):
         super(Ready_Main, self).__init__(parent)
         self.setupUi(self)
@@ -984,7 +983,7 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Дописать!
         self.map = SeaMap(self.boardMap)
         self.new_count()
         self.new_map()
-        # self.new_images('green')
+        self.new_images('green')
 
         self.initUI()
 
@@ -1022,17 +1021,17 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Дописать!
         self.pixmap_linkor = QPixmap(f"images/Linkor_{who}.svg")
         self.pixmap_kreyser = QPixmap(f"images/Kreyser_{who}.svg")
         self.pixmap_esminec = QPixmap(f"images/Esminec_{who}.svg")
-        # self.pixmap_torped = QPixmap(f"images/Torped_{who}.svg")
+        self.pixmap_torped = QPixmap(f"images/Torped_{who}.svg")
 
         self.pixmap_linkor = self.pixmap_linkor.scaled(259, 110)
         self.pixmap_kreyser = self.pixmap_kreyser.scaled(260, 110)
         self.pixmap_esminec = self.pixmap_esminec.scaled(260, 110)
-        # self.pixmap_torped = self.pixmap_torped.scaled(260, 110)
+        self.pixmap_torped = self.pixmap_torped.scaled(260, 110)
 
         self.linkorImage.setPixmap(self.pixmap_linkor)
         self.kreyserImage.setPixmap(self.pixmap_kreyser)
         self.esminecImage.setPixmap(self.pixmap_esminec)
-        # self.torpedImage.setPixmap(self.pixmap_torped)
+        self.torpedImage.setPixmap(self.pixmap_torped)
 
     def start(self):
         if self.countL != 0 or self.countK != 0 or self.countE != 0 or self.countT != 0:
@@ -1059,6 +1058,8 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Дописать!
         self.countT = 4
 
     def coords_is_right(self, new_coords, num, mode='dual'):
+        new_coords[0] = new_coords[0].upper()
+        new_coords[1] = new_coords[1].upper()
         if mode != 'v':
             return (COORDS[new_coords[1]][0] - COORDS[new_coords[0]][0] == 0 and
                     COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == num) or \
@@ -1067,82 +1068,70 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Дописать!
         return COORDS[new_coords[1]][0] - COORDS[new_coords[0]][0] == num and \
                COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == 0
 
+    def check(self, c1, c2, i, num):
+        if num == 1:
+            return str(self.boardMap.item(c1 + i, c2).text()) == "*" or \
+                   str(self.boardMap.item(c1 + i, c2).text()) == "X"
+        return str(self.boardMap.item(c1, c2 + i).text()) == "*" or \
+               str(self.boardMap.item(c1, c2 + i).text()) == "X"
+
     def error(self, text="You entered the coordinates incorrectly."):
         QMessageBox.critical(self, 'ERROR!', text)
 
+    def setShip(self, coords, num, who):
+        error = False
+        new_coords = coords.split('-')
+        if self.coords_is_right(new_coords, num):
+            if self.coords_is_right(new_coords, num, 'v'):
+                vertical = True
+            else:
+                vertical = False
+            c1, c2 = COORDS[new_coords[0]][0], COORDS[new_coords[0]][1]
+            for i in range(num + 1):
+                if not vertical:
+                    if self.check(c1, c2, i, 2):
+                        error = True
+                        self.error()
+                        break
+                    self.boardMap.setItem(c1, c2 + i, QTableWidgetItem("X"))
+                    if i == num:
+                        self.map.shoot(c1, c2 + i, "sink")
+                else:
+                    if self.check(c1, c2, i, 1):
+                        error = True
+                        self.error()
+                        break
+                    self.boardMap.setItem(c1 + i, c2, QTableWidgetItem("X"))
+                    if i == num:
+                        self.map.shoot(c1 + i, c2, 'sink')
+            if not error:
+                if who == "L":
+                    self.countL -= 1
+                elif who == "K":
+                    self.countK -= 1
+                elif who == "E":
+                    self.countE -= 1
+        else:
+            self.error()
+
     def setLinkor(self):
+        if self.countL == 0:
+            self.error("Ships ended")
+            return
         coords, ok = QInputDialog.getText(self, f'{self.countL} left', 'Enter coords for Linkor:\n'
                                                                        'Example: A1-D1')
         if ok and self.countL != 0:
             try:
-                error = False
-                new_coords = coords.split('-')
-                if self.coords_is_right(new_coords, 3):
-                    if self.coords_is_right(new_coords, 3, 'v'):
-                        vertical = True
-                    else:
-                        vertical = False
-                    c1, c2 = COORDS[new_coords[0]][0], COORDS[new_coords[0]][1]
-                    for i in range(4):
-                        if not vertical:
-                            if str(self.boardMap.item(c1, c2 + i).text()) == "*" or \
-                                    str(self.boardMap.item(c1, c2 + i).text()) == "X":
-                                flag = True
-                                break
-                            self.boardMap.setItem(c1, c2 + i, QTableWidgetItem("X"))
-                            if i == 3:
-                                self.map.shoot(c1, c2 + i, "sink")
-                        else:
-                            if str(self.boardMap.item(c1 + i, c2).text()) == "*" or \
-                                    str(self.boardMap.item(c1 + i, c2).text()) == "X":
-                                flag = True
-                                break
-                            self.boardMap.setItem(c1 + i, c2, QTableWidgetItem("X"))
-                            if i == 3:
-                                self.map.shoot(c1 + i, c2, 'sink')
-                    if not error:
-                        self.countL -= 1
-                else:
-                    self.error()
+                self.setShip(coords, 3, "L")
             except BaseException:
                 self.error()
-        elif self.countL == 0:
-            self.error("Ships ended")
 
     def setKreyser(self):
         coords, ok = QInputDialog.getText(self, f'{self.countK} left', 'Enter coords for Kreyser:\n'
                                                                        'Example: A3-C3')
         if ok and self.countK != 0:
             try:
-                error = False
-                new_coords = coords.split('-')
-                if self.coords_is_right(new_coords, 2):
-                    if self.coords_is_right(new_coords, 2, 'v'):
-                        vertical = True
-                    else:
-                        vertical = False
-                    c1, c2 = COORDS[new_coords[0]][0], COORDS[new_coords[0]][1]
-                    for i in range(3):
-                        if not vertical:
-                            if str(self.boardMap.item(c1, c2 + i).text()) == "*" or \
-                                    str(self.boardMap.item(c1, c2 + i).text()) == "X":
-                                error = True
-                                break
-                            self.boardMap.setItem(c1, c2 + i, QTableWidgetItem("X"))
-                            if i == 2:
-                                self.map.shoot(c1, c2 + i, "sink")
-                        else:
-                            if str(self.boardMap.item(c1 + i, c2).text()) == "*" or \
-                                    str(self.boardMap.item(c1 + i, c2).text()) == "X":
-                                error = True
-                                break
-                            self.boardMap.setItem(c1 + i, c2, QTableWidgetItem("X"))
-                            if i == 2:
-                                self.map.shoot(c1 + i, c2, 'sink')
-                    if not error:
-                        self.countK -= 1
-                else:
-                    self.error()
+                self.setShip(coords, 2, "K")
             except BaseException:
                 self.error()
         elif self.countK == 0:
@@ -1153,48 +1142,20 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Дописать!
                                                                        'Example: A5-B5')
         if ok and self.countE != 0:
             try:
-                error = False
-                new_coords = coords.split('-')
-                if self.coords_is_right(new_coords, 1):
-                    if self.coords_is_right(new_coords, 1, 'v'):
-                        vertical = True
-                    else:
-                        vertical = False
-                    c1, c2 = COORDS[new_coords[0]][0], COORDS[new_coords[0]][1]
-                    for i in range(2):
-                        if not vertical:
-                            if str(self.boardMap.item(c1, c2 + i).text()) == "*" or \
-                                    str(self.boardMap.item(c1, c2 + i).text()) == "X":
-                                error = True
-                                break
-                            self.boardMap.setItem(c1, c2 + i, QTableWidgetItem("X"))
-                            if i == 1:
-                                self.map.shoot(c1, c2 + i, "sink")
-                        else:
-                            if str(self.boardMap.item(c1 + i, c2).text()) == "*" or \
-                                    str(self.boardMap.item(c1 + i, c2).text()) == "X":
-                                error = True
-                                break
-                            self.boardMap.setItem(c1 + i, c2, QTableWidgetItem("X"))
-                            if i == 1:
-                                self.map.shoot(c1 + i, c2, 'sink')
-                    if not error:
-                        self.countE -= 1
-                else:
-                    self.error()
+                self.setShip(coords, 1, "E")
             except BaseException:
                 self.error()
         elif self.countE == 0:
             self.error("Ships ended")
 
     def setTorped(self):
-        coords, ok = QInputDialog.getText(self, f'{self.countT} left', 'Enter coord for Torped:\n'
-                                                                       'Example: A7')
+        coord, ok = QInputDialog.getText(self, f'{self.countT} left', 'Enter coord for Torped:\n'
+                                                                      'Example: A7')
         if ok and self.countT != 0:
             try:
-                if str(self.boardMap.item(*COORDS[coords]).text()) == ".":
-                    self.boardMap.setItem(*COORDS[coords], QTableWidgetItem("X"))
-                    self.map.shoot(*COORDS[coords], 'sink')
+                if str(self.boardMap.item(*COORDS[coord]).text()) == ".":
+                    self.boardMap.setItem(*COORDS[coord], QTableWidgetItem("X"))
+                    self.map.shoot(*COORDS[coord], 'sink')
                     self.countT -= 1
                 else:
                     self.error()
@@ -1245,7 +1206,7 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):  # дописать!
         try:
             if COORDS[coord]:
                 self.info()
-        except KeyError:  # изменить
+        except KeyError:
             QMessageBox.critical(self, "ERROR", "Your coord isn't right")
         else:
             pass
