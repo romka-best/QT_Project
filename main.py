@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, \
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtCore import QBasicTimer, QCoreApplication
+from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from random import randrange
 import sqlite3
 
@@ -119,7 +120,7 @@ players = []
 Отстутствуют некоторые изображения
 Отстутствует презентация
 Код не оптимизирован
-Проект готов на 73%"""
+Проект готов на 77%"""
 
 
 class Ui_MainWindow_loading(object):  # loading.py start
@@ -455,29 +456,24 @@ class Ui_MainWindow_ready(object):  # readygame.py
         self.linkorButton = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
         font = QtGui.QFont()
         font.setPointSize(10)
-        font.setItalic(True)
         self.linkorButton.setFont(font)
         self.linkorButton.setObjectName("linkorButton")
         self.verticalLayout_2.addWidget(self.linkorButton)
         self.kreyserButton = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
         font = QtGui.QFont()
         font.setPointSize(10)
-        font.setItalic(True)
         self.kreyserButton.setFont(font)
         self.kreyserButton.setObjectName("kreyserButton")
         self.verticalLayout_2.addWidget(self.kreyserButton)
         self.esminecButton = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
         font = QtGui.QFont()
         font.setPointSize(10)
-        font.setItalic(True)
         self.esminecButton.setFont(font)
         self.esminecButton.setObjectName("esminecButton")
         self.verticalLayout_2.addWidget(self.esminecButton)
         self.torpedButton = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
         font = QtGui.QFont()
         font.setPointSize(10)
-        font.setItalic(True)
-        font.setStrikeOut(False)
         self.torpedButton.setFont(font)
         self.torpedButton.setObjectName("torpedButton")
         self.verticalLayout_2.addWidget(self.torpedButton)
@@ -848,12 +844,21 @@ class Loading_Main(QMainWindow, Ui_MainWindow_loading):  # Осталось вс
     def __init__(self, parent=None):
         super(Loading_Main, self).__init__(parent)
         self.setupUi(self)
+        self.mediaplayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
         self.timer = QBasicTimer()
         self.step = 0
         self.initUI()
 
     def initUI(self):
+        self.load_mp4("videos/animation.gif")
         self.pushButton.clicked.connect(self.doAction)
+
+    def load_mp4(self, filename):
+        media = QtCore.QUrl.fromLocalFile(filename)
+        content = QMediaContent(media)
+        self.mediaplayer.setMedia(content)
+        self.mediaplayer.play()
+        self.mediaplayer.setVideoOutput(self.widget)
 
     def timerEvent(self, e):
         if self.step >= 100:
@@ -893,10 +898,14 @@ class Startmenu_Main(QMainWindow, Ui_MainWindow_startmenu):  # Нужно вст
         self.image1.setPixmap(self.imageleft)
         # self.image2.setPixmap(self.imageright)
 
-        self.startButton.setStyleSheet("color: white; background-color: #082567; border-radius: 20px;")
-        self.rulesButton.setStyleSheet("color: white; background-color: #082567; border-radius: 20px;")
-        self.settingsButton.setStyleSheet("color: white; background-color: #082567; border-radius: 20px;")
-        self.exitButton.setStyleSheet("color: white; background-color: #082567; border-radius: 20px;")
+        self.startButton.setStyleSheet("color: white; background-color: #082567;"
+                                       "border-radius: 20px;")
+        self.rulesButton.setStyleSheet("color: white; background-color: #082567;"
+                                       "border-radius: 20px;")
+        self.settingsButton.setStyleSheet("color: white; background-color: #082567;"
+                                          "border-radius: 20px;")
+        self.exitButton.setStyleSheet("color: white; background-color: #082567;"
+                                      "border-radius: 20px;")
 
         self.startButton.clicked.connect(self.to_start)
         self.rulesButton.clicked.connect(self.to_rules)
@@ -923,8 +932,10 @@ class Settings_Main(QMainWindow, Ui_MainWindow_settings):  # Доработат�
         self.LOGOSB = QPixmap("images/logosb.svg")
         self.logoImage.setPixmap(self.LOGOSB)
 
-        self.backButton.setStyleSheet("color: white; background-color: #082567; border-radius: 20px;")
-        self.saveButton.setStyleSheet("color: white; background-color: #082567; border-radius: 20px;")
+        self.backButton.setStyleSheet("color: white; background-color: #082567;"
+                                      "border-radius: 20px;")
+        self.saveButton.setStyleSheet("color: white; background-color: #082567;"
+                                      "border-radius: 20px;")
 
         self.radiopve.toggled.connect(self.changeP)
         self.radiopvp.toggled.connect(self.changeP)
@@ -938,7 +949,8 @@ class Settings_Main(QMainWindow, Ui_MainWindow_settings):  # Доработат�
         pass
 
     def changeP(self):
-        radioButton = self.sender().text()
+        pass
+        # who = self.sender().text()
 
 
 class Rules_Main(QMainWindow, Ui_MainWindow_rules):
@@ -948,8 +960,9 @@ class Rules_Main(QMainWindow, Ui_MainWindow_rules):
         self.LOGOSB = QPixmap("images/logosb.svg")
         self.initUI()
 
-    def initUI(self):
-        self.backButton.setStyleSheet("color: white; background-color: #082567; border-radius: 20px;")
+    def initUI(self):  # Оптимизировать!
+        self.backButton.setStyleSheet("color: white; background-color: #082567;"
+                                      "border-radius: 20px;")
         self.backButton.clicked.connect(self.to_start)
 
         self.logoImage.setPixmap(self.LOGOSB)
@@ -989,11 +1002,16 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
 
     def initUI(self):
         self.readyButton.clicked.connect(self.start)
-        self.readyButton.setStyleSheet("color: white; background-color: #082567; border-radius: 10px;")
-        self.linkorButton.setStyleSheet("color: white; background-color: #082567; border-radius: 10px;")
-        self.kreyserButton.setStyleSheet("color: white; background-color: #082567; border-radius: 10px;")
-        self.esminecButton.setStyleSheet("color: white; background-color: #082567; border-radius: 10px;")
-        self.torpedButton.setStyleSheet("color: white; background-color: #082567; border-radius: 10px;")
+        self.readyButton.setStyleSheet("color: white; background-color: #082567;"
+                                       "border-radius: 10px;")
+        self.linkorButton.setStyleSheet("color: white; background-color: #082567;"
+                                        "border-radius: 10px;")
+        self.kreyserButton.setStyleSheet("color: white; background-color: #082567;"
+                                         "border-radius: 10px;")
+        self.esminecButton.setStyleSheet("color: white; background-color: #082567;"
+                                         "border-radius: 10px;")
+        self.torpedButton.setStyleSheet("color: white; background-color: #082567;"
+                                        "border-radius: 10px;")
 
         self.linkorButton.clicked.connect(self.setLinkor)
         self.kreyserButton.clicked.connect(self.setKreyser)
@@ -1043,7 +1061,7 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
             self.readyButton.setText("I am ready too")
             self.playerLabel.setText("PLAYER 2")
             self.new_count()
-            self.boardMap.clear()
+            # self.boardMap.clear()
             self.new_map()
             self.new_images('red')
         else:
@@ -1065,15 +1083,15 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
                     COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == num) or \
                    (COORDS[new_coords[1]][0] - COORDS[new_coords[0]][0] == num and
                     COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == 0)
-        return COORDS[new_coords[1]][0] - COORDS[new_coords[0]][0] == num and \
-               COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == 0
+        return (COORDS[new_coords[1]][0] - COORDS[new_coords[0]][0] == num and
+                COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == 0)
 
     def check(self, c1, c2, i, num):
         if num == 1:
-            return str(self.boardMap.item(c1 + i, c2).text()) == "*" or \
-                   str(self.boardMap.item(c1 + i, c2).text()) == "X"
-        return str(self.boardMap.item(c1, c2 + i).text()) == "*" or \
-               str(self.boardMap.item(c1, c2 + i).text()) == "X"
+            return (str(self.boardMap.item(c1 + i, c2).text()) == "*" or
+                    str(self.boardMap.item(c1 + i, c2).text()) == "X")
+        return (str(self.boardMap.item(c1, c2 + i).text()) == "*" or
+                str(self.boardMap.item(c1, c2 + i).text()) == "X")
 
     def error(self, text="You entered the coordinates incorrectly."):
         QMessageBox.critical(self, 'ERROR!', text)
@@ -1127,6 +1145,9 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
                 self.error()
 
     def setKreyser(self):
+        if self.countK == 0:
+            self.error("Ships ended")
+            return
         coords, ok = QInputDialog.getText(self, f'{self.countK} left', 'Enter coords for Kreyser:\n'
                                                                        'Example: A3-C3')
         if ok and self.countK != 0:
@@ -1134,10 +1155,11 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
                 self.setShip(coords, 2, "K")
             except BaseException:
                 self.error()
-        elif self.countK == 0:
-            self.error("Ships ended")
 
     def setEsminec(self):
+        if self.countE == 0:
+            self.error("Ships ended")
+            return
         coords, ok = QInputDialog.getText(self, f'{self.countE} left', 'Enter coords for Esminec:\n'
                                                                        'Example: A5-B5')
         if ok and self.countE != 0:
@@ -1145,24 +1167,23 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
                 self.setShip(coords, 1, "E")
             except BaseException:
                 self.error()
-        elif self.countE == 0:
-            self.error("Ships ended")
 
     def setTorped(self):
+        if self.countT == 0:
+            self.error("Ships ended")
+            return
         coord, ok = QInputDialog.getText(self, f'{self.countT} left', 'Enter coord for Torped:\n'
                                                                       'Example: A7')
         if ok and self.countT != 0:
             try:
-                if str(self.boardMap.item(*COORDS[coord]).text()) == ".":
-                    self.boardMap.setItem(*COORDS[coord], QTableWidgetItem("X"))
-                    self.map.shoot(*COORDS[coord], 'sink')
+                if str(self.boardMap.item(*COORDS[coord.upper()]).text()) == ".":
+                    self.boardMap.setItem(*COORDS[coord.upper()], QTableWidgetItem("X"))
+                    self.map.shoot(*COORDS[coord.upper()], 'sink')
                     self.countT -= 1
                 else:
                     self.error()
             except BaseException:
                 self.error()
-        elif self.countT == 0:
-            self.error("Ships ended")
 
 
 class PVP_Main(QMainWindow, Ui_MainWindow_pvp):  # дописать!
@@ -1177,39 +1198,113 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):  # дописать!
         self.pixmap_vs = QPixmap("images/vs.svg")
 
         self.turn = "Player1"
-        self.change_of_course()
+
+        self.map1 = SeaMap(self.tableWidget)
+        self.map2 = SeaMap(self.tableWidget_2)
+
+        self.new_boards()
 
         self.initUI()
 
     def initUI(self):
         self.courseButton.clicked.connect(self.course)
 
+        self.board1Label.setPixmap(self.pixmap_your_green)
+        self.board2Label.setPixmap(self.pixmap_enemy_red)
+
         self.vsLable.setPixmap(self.pixmap_vs)
         self.courseButton.setStyleSheet("color: white; background-color: #082567;")
 
+    def new_boards(self):
+        for i in range(self.tableWidget.columnCount()):
+            for j in range(self.tableWidget.rowCount()):
+                cell = QTableWidgetItem(".")
+                cell.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                self.tableWidget.setItem(i, j, cell)
+        for i in range(self.tableWidget_2.columnCount()):
+            for j in range(self.tableWidget_2.rowCount()):
+                cell = QTableWidgetItem(".")
+                cell.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                self.tableWidget_2.setItem(i, j, cell)
+        self.tableWidget.resizeColumnsToContents()
+        self.tableWidget.resizeRowsToContents()
+        self.tableWidget_2.resizeColumnsToContents()
+        self.tableWidget_2.resizeRowsToContents()
+
     def change_of_course(self):
         if self.turn == "Player1":
-            self.board1Label.setPixmap(self.pixmap_your_green)
-            self.board2Label.setPixmap(self.pixmap_enemy_red)
-            self.turn = "Player2"
-        elif self.turn == "Player2":
             self.board2Label.setPixmap(self.pixmap_your_green)
             self.board1Label.setPixmap(self.pixmap_enemy_red)
+            self.turn = "Player2"
+            players[0], players[1] = players[1], players[0]
+        elif self.turn == "Player2":
+            self.board1Label.setPixmap(self.pixmap_your_green)
+            self.board2Label.setPixmap(self.pixmap_enemy_red)
             self.turn = "Player1"
+            players[0], players[1] = players[1], players[0]
 
     def info(self, text="Your coord is right"):
         QMessageBox.information(self, "INFO", text)
 
     def course(self):
-        coord, ok = QInputDialog.getText(self, f'Course: {self.turn}', 'Enter coord:\n'
-                                                                       'Example: A7')
+        coord, ok = QInputDialog.getText(self, f'{self.turn}', 'Enter coord:\n'
+                                                               'Example: A7')
+        coord = coord.upper()
         try:
             if COORDS[coord]:
                 self.info()
         except KeyError:
             QMessageBox.critical(self, "ERROR", "Your coord isn't right")
         else:
-            pass
+            c1, c2 = COORDS[coord][0], COORDS[coord][1]
+            if self.dot_or_notdot(coord):
+                if any(self.hasOne(COORDS[coord], shift) for shift in ((1, 0), (-1, 0), (0, 1), (0, -1))):
+                    self.info("HIT!")
+                    if self.turn[-1] == '1':
+                        self.map2.shoot(c1, c2, 'hit')
+                    else:
+                        self.map1.shoot(c1, c2, 'hit')
+                    players[0].board[c1][c2] = 0
+                    self.course()
+                    return
+                else:
+                    self.info("SINK!")
+                    if self.turn[-1] == '1':
+                        self.map2.shoot(c1, c2, 'sink')
+                    else:
+                        self.map1.shoot(c1, c2, 'sink')
+                    players[0].board[c1][c2] = 0
+                    self.course()
+                    return
+            else:
+                self.info("MISS!")
+                if self.turn[-1] == '1':
+                    self.map2.shoot(c1, c2, 'miss')
+                else:
+                    self.map1.shoot(c1, c2, 'miss')
+            if all(players[0].board[i][j] == 0 for i in range(10) for j in range(10)):
+                self.info(f"WIN {self.turn}!")
+                windows.setCurrentIndex(6)
+            self.change_of_course()
+
+    def dot_or_notdot(self, coord):
+        con = sqlite3.connect("Players.db")
+        cur = con.cursor()
+        result = cur.execute(
+            f"""SELECT {coord[0]} FROM Player{players[1].who[-1]} WHERE id={COORDS[coord][0] + 1}""").fetchone()
+        if result[0] == "." or result[0] == "*":
+            return False
+        return True
+
+    def hasOne(self, pos, shift):
+        x, y = pos
+        dx, dy = shift
+        x += dx
+        y += dy
+        if 0 <= x < 10 and 0 <= y < 10:
+            if players[1].board[x][y] == 1:
+                return True
+        return False
 
 
 class Win_Main(QMainWindow, Ui_MainWindow_win):  # Дописать

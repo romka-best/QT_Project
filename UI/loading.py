@@ -39,6 +39,4 @@ class Ui_mainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         mainWindow.setWindowTitle(_translate("mainWindow", "Loading"))
         self.pushButton.setText(_translate("mainWindow", "BEST PRODUCTIONS"))
-
-
 from PyQt5.QtMultimediaWidgets import QVideoWidget
