@@ -1,14 +1,16 @@
 import sys
+from random import randrange
+import sqlite3
 
 from PyQt5.QtGui import QPixmap, QIcon
+from PyQt5.QtCore import QBasicTimer, QCoreApplication
+
 from PyQt5.QtWidgets import QApplication, QMainWindow, \
     QStackedWidget, QMessageBox, QInputDialog, QTableWidgetItem
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 from PyQt5.QtMultimediaWidgets import QVideoWidget
-from PyQt5.QtCore import QBasicTimer, QCoreApplication
-from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
-from random import randrange
-import sqlite3
+from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer, QMediaPlaylist
 
 SCREEN_SIZE = [(960, 540), (1280, 720), (1920, 1080)]
 COORDS = {
@@ -116,14 +118,14 @@ COORDS = {
 players = []
 
 """Не работают настройки
-Не работает бой
-Отстутствуют некоторые изображения
-Отстутствует презентация
-Код не оптимизирован
-Проект готов на 77%"""
+Отстутствуют некоторые видео и аудио
+Код не до конца оптимизирован
+Проект готов на 85%"""
 
 
-class Ui_MainWindow_loading(object):  # loading.py start
+class Ui_MainWindow_loading(object):  # loading.py
+    """Создаю дизайн виджета загрузки"""
+
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
         mainWindow.resize(960, 540)
@@ -155,6 +157,8 @@ class Ui_MainWindow_loading(object):  # loading.py start
 
 
 class Ui_MainWindow_startmenu(object):  # startmenu.py
+    """Создаю дизайн виджета стартового меню"""
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(960, 540)
@@ -199,16 +203,8 @@ class Ui_MainWindow_startmenu(object):  # startmenu.py
         self.exitButton.setObjectName("exitButton")
         self.verticalLayout.addWidget(self.exitButton)
         self.videoStartMenu = QVideoWidget(self.centralwidget)
-        self.videoStartMenu.setGeometry(QtCore.QRect(100, 0, 761, 100))
+        self.videoStartMenu.setGeometry(QtCore.QRect(0, 0, 961, 100))
         self.videoStartMenu.setObjectName("videoStartMenu")
-        self.image1 = QtWidgets.QLabel(self.centralwidget)
-        self.image1.setGeometry(QtCore.QRect(0, 200, 240, 161))
-        self.image1.setText("")
-        self.image1.setObjectName("image1")
-        self.image2 = QtWidgets.QLabel(self.centralwidget)
-        self.image2.setGeometry(QtCore.QRect(720, 200, 240, 161))
-        self.image2.setText("")
-        self.image2.setObjectName("image2")
         self.logoImage1 = QtWidgets.QLabel(self.centralwidget)
         self.logoImage1.setGeometry(QtCore.QRect(0, 0, 100, 100))
         self.logoImage1.setText("")
@@ -217,6 +213,12 @@ class Ui_MainWindow_startmenu(object):  # startmenu.py
         self.logoImage2.setGeometry(QtCore.QRect(860, 0, 100, 100))
         self.logoImage2.setText("")
         self.logoImage2.setObjectName("logoImage2")
+        self.videoStartMenu_2 = QVideoWidget(self.centralwidget)
+        self.videoStartMenu_2.setGeometry(QtCore.QRect(740, 200, 200, 150))
+        self.videoStartMenu_2.setObjectName("videoStartMenu_2")
+        self.videoStartMenu_1 = QVideoWidget(self.centralwidget)
+        self.videoStartMenu_1.setGeometry(QtCore.QRect(20, 200, 200, 150))
+        self.videoStartMenu_1.setObjectName("videoStartMenu_1")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 960, 26))
@@ -236,6 +238,8 @@ class Ui_MainWindow_startmenu(object):  # startmenu.py
 
 
 class Ui_MainWindow_settings(object):  # settings.py
+    """Создаю дизайн виджета загрузки"""
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(960, 540)
@@ -312,6 +316,8 @@ class Ui_MainWindow_settings(object):  # settings.py
 
 
 class Ui_MainWindow_rules(object):  # rules.py
+    """Создаю дизайн виджета правил"""
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(960, 540)
@@ -350,6 +356,8 @@ class Ui_MainWindow_rules(object):  # rules.py
 
 
 class Ui_MainWindow_ready(object):  # readygame.py
+    """Создаю дизайн виджета начала игры"""
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(960, 540)
@@ -538,6 +546,8 @@ class Ui_MainWindow_ready(object):  # readygame.py
 
 
 class Ui_MainWindow_pvp(object):  # gamepvp.py
+    """Создаю дизайн виджета самой игры"""
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(960, 540)
@@ -809,6 +819,8 @@ class Ui_MainWindow_pvp(object):  # gamepvp.py
 
 
 class Ui_MainWindow_win(object):
+    """Создаю дизайн виджета выиграша"""
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(960, 540)
@@ -837,10 +849,12 @@ class Ui_MainWindow_win(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "WIN"))
-        self.pushButton.setText(_translate("MainWindow", "Back to start"))
+        self.pushButton.setText(_translate("MainWindow", "EXIT"))
 
 
-class Loading_Main(QMainWindow, Ui_MainWindow_loading):  # Осталось вставить видео
+class Loading_Main(QMainWindow, Ui_MainWindow_loading):
+    """Псевдозагрузочная анимация, но в дальнейшем данное умение пригодится"""
+
     def __init__(self, parent=None):
         super(Loading_Main, self).__init__(parent)
         self.setupUi(self)
@@ -853,14 +867,14 @@ class Loading_Main(QMainWindow, Ui_MainWindow_loading):  # Осталось вс
         self.load_mp4("videos/animation.gif")
         self.pushButton.clicked.connect(self.doAction)
 
-    def load_mp4(self, filename):
+    def load_mp4(self, filename):  # Загружаю ГИФ-файл
         media = QtCore.QUrl.fromLocalFile(filename)
         content = QMediaContent(media)
         self.mediaplayer.setMedia(content)
         self.mediaplayer.play()
         self.mediaplayer.setVideoOutput(self.widget)
 
-    def timerEvent(self, e):
+    def timerEvent(self, e):  # Загрузка
         if self.step >= 100:
             self.timer.stop()
             self.pushButton.setText('Finished')
@@ -870,7 +884,7 @@ class Loading_Main(QMainWindow, Ui_MainWindow_loading):  # Осталось вс
         self.step = self.step + randrange(0, 10)
         self.progressBar.setValue(self.step)
 
-    def doAction(self):
+    def doAction(self):  # Если пользователь нажимает кнопку
         if self.timer.isActive():
             self.timer.stop()
             self.pushButton.setText('BEST PRODUCTIONS')
@@ -879,25 +893,25 @@ class Loading_Main(QMainWindow, Ui_MainWindow_loading):  # Осталось вс
             self.pushButton.setText('Stop')
 
 
-class Startmenu_Main(QMainWindow, Ui_MainWindow_startmenu):  # Нужно вставить картинки и видео
+class Startmenu_Main(QMainWindow, Ui_MainWindow_startmenu):  # Нужно вставить видео
+    """Стартовое меню, где можно переключаться между окнами, а также выйти из игры"""
+
     def __init__(self, parent=None):
         super(Startmenu_Main, self).__init__(parent)
         self.setupUi(self)
 
         self.LOGOBP = QPixmap("images/logobp.svg")
-        self.imageleft = QPixmap('images/Esminec_red.svg')
-        # self.imageright = QPixmap('images/')
+        self.mediaplayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
 
         self.initUI()
 
     def initUI(self):
         self.logoImage1.setPixmap(self.LOGOBP)
         self.logoImage2.setPixmap(self.LOGOBP)
-        self.imageleft = self.imageleft.scaled(200, 240)
-        # self.imageright = self.imageright.scaled(200, 240)
-        self.image1.setPixmap(self.imageleft)
-        # self.image2.setPixmap(self.imageright)
 
+        self.load_mp4("videos/animation800.gif")
+
+        # Задаю цвет кнопкам
         self.startButton.setStyleSheet("color: white; background-color: #082567;"
                                        "border-radius: 20px;")
         self.rulesButton.setStyleSheet("color: white; background-color: #082567;"
@@ -912,17 +926,26 @@ class Startmenu_Main(QMainWindow, Ui_MainWindow_startmenu):  # Нужно вст
         self.exitButton.clicked.connect(QCoreApplication.instance().quit)
         self.settingsButton.clicked.connect(self.to_settings)
 
-    def to_settings(self):
+    def load_mp4(self, filename):  # Загрузка GIF-файла
+        media = QtCore.QUrl.fromLocalFile(filename)
+        content = QMediaContent(media)
+        self.mediaplayer.setMedia(content)
+        self.mediaplayer.play()
+        self.mediaplayer.setVideoOutput(self.videoStartMenu_1)
+
+    def to_settings(self):  # Переходит в меню настроек
         windows.setCurrentIndex(2)
 
-    def to_rules(self):
+    def to_rules(self):  # Переходит в меню правил
         windows.setCurrentIndex(3)
 
-    def to_start(self):
+    def to_start(self):  # Переходит в меню начала игры
         windows.setCurrentIndex(4)
 
 
 class Settings_Main(QMainWindow, Ui_MainWindow_settings):  # Доработать всё!
+    """Меню настроек, где можно изменить режим игры, а также сменить язык"""
+
     def __init__(self, parent=None):
         super(Settings_Main, self).__init__(parent)
         self.setupUi(self)
@@ -932,6 +955,7 @@ class Settings_Main(QMainWindow, Ui_MainWindow_settings):  # Доработат�
         self.LOGOSB = QPixmap("images/logosb.svg")
         self.logoImage.setPixmap(self.LOGOSB)
 
+        # Задаю цвет кнопкам
         self.backButton.setStyleSheet("color: white; background-color: #082567;"
                                       "border-radius: 20px;")
         self.saveButton.setStyleSheet("color: white; background-color: #082567;"
@@ -942,25 +966,27 @@ class Settings_Main(QMainWindow, Ui_MainWindow_settings):  # Доработат�
         self.backButton.clicked.connect(self.to_start)
         self.saveButton.clicked.connect(self.to_save)
 
-    def to_start(self):
+    def to_start(self):  # Переход в стартовое меню
         windows.setCurrentIndex(1)
 
-    def to_save(self):
+    def to_save(self):  # Сохраняет изменения
         pass
 
-    def changeP(self):
+    def changeP(self):  # Меняет режим игры
         pass
         # who = self.sender().text()
 
 
 class Rules_Main(QMainWindow, Ui_MainWindow_rules):
+    """Меню правил"""
+
     def __init__(self, parent=None):
         super(Rules_Main, self).__init__(parent)
         self.setupUi(self)
         self.LOGOSB = QPixmap("images/logosb.svg")
         self.initUI()
 
-    def initUI(self):  # Оптимизировать!
+    def initUI(self):
         self.backButton.setStyleSheet("color: white; background-color: #082567;"
                                       "border-radius: 20px;")
         self.backButton.clicked.connect(self.to_start)
@@ -984,24 +1010,28 @@ class Rules_Main(QMainWindow, Ui_MainWindow_rules):
         The ships cannot overlap (i.e., only one ship can occupy any given square in the grid).
         The types and numbers of ships allowed are the same for each player.""")
 
-    def to_start(self):
+    def to_start(self):  # Переход в стартовое меню
         windows.setCurrentIndex(1)
 
 
 class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изображения, оптимизировать код
+    """Меню подготовления к самой игре"""
+
     def __init__(self, parent=None):
         super(Ready_Main, self).__init__(parent)
         self.setupUi(self)
 
         self.map = SeaMap(self.boardMap)
-        self.new_count()
-        self.new_map()
-        self.new_images('green')
+        self.new_count()  # Обновление переменных-счётчиков
+        self.new_map()  # Обновление карты
+        self.new_images('green')  # Добавления изображений
 
         self.initUI()
 
     def initUI(self):
         self.readyButton.clicked.connect(self.start)
+
+        # Задаю цвет и форму кнопкам
         self.readyButton.setStyleSheet("color: white; background-color: #082567;"
                                        "border-radius: 10px;")
         self.linkorButton.setStyleSheet("color: white; background-color: #082567;"
@@ -1018,7 +1048,7 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
         self.esminecButton.clicked.connect(self.setEsminec)
         self.torpedButton.clicked.connect(self.setTorped)
 
-    def new_map(self):
+    def new_map(self):  # Метод создаёт(обновляет) карту
         for i in range(self.boardMap.columnCount()):
             for j in range(self.boardMap.rowCount()):
                 cell = QTableWidgetItem(".")
@@ -1027,7 +1057,7 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
         self.boardMap.resizeColumnsToContents()
         self.boardMap.resizeRowsToContents()
 
-    def new_db(self, who):
+    def new_db(self, who):  # Занесения данных в базу данных
         self.con = sqlite3.connect("Players.db")
         self.cur = self.con.cursor()
         for i, j in COORDS.items():
@@ -1035,7 +1065,7 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
                          WHERE id={int(i[1:])}""")
         self.con.commit()
 
-    def new_images(self, who):
+    def new_images(self, who):  # Создание(обновление) изображений
         self.pixmap_linkor = QPixmap(f"images/Linkor_{who}.svg")
         self.pixmap_kreyser = QPixmap(f"images/Kreyser_{who}.svg")
         self.pixmap_esminec = QPixmap(f"images/Esminec_{who}.svg")
@@ -1052,30 +1082,33 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
         self.torpedImage.setPixmap(self.pixmap_torped)
 
     def start(self):
-        if self.countL != 0 or self.countK != 0 or self.countE != 0 or self.countT != 0:
+        """Если Игрок1 нажал кнопку,
+        то Игрок2 начинает заполнять данные.
+        Иначе переходит в меню игры"""
+        """if self.countL != 0 or self.countK != 0 or self.countE != 0 or self.countT != 0:
             self.error("You haven't set all the ships")
-            return
+            return"""
         if self.sender().text() == 'I am ready':
             self.new_db("Player1")
-            players.append(Player('Player1', self.boardMap))
+            players.append(Player('Player1', self.boardMap))  # Добавление в список игрока
             self.readyButton.setText("I am ready too")
             self.playerLabel.setText("PLAYER 2")
-            self.new_count()
-            # self.boardMap.clear()
-            self.new_map()
-            self.new_images('red')
+            self.new_count()  # Обновление переменных-счётчиков
+            self.new_map()  # Обновление карты
+            self.new_images('red')  # Обновление изображений
         else:
             self.new_db("Player2")
-            players.append(Player('Player2', self.boardMap))
+            players.append(Player('Player2', self.boardMap))  # Добавление в список игрока
             windows.setCurrentIndex(5)
 
-    def new_count(self):
+    def new_count(self):  # Создание(обновление) переменных-счётчиков
         self.countL = 1
         self.countK = 2
         self.countE = 3
         self.countT = 4
 
     def coords_is_right(self, new_coords, num, mode='dual'):
+        # проверка на правильность введённых координат
         new_coords[0] = new_coords[0].upper()
         new_coords[1] = new_coords[1].upper()
         if mode != 'v':
@@ -1087,16 +1120,18 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
                 COORDS[new_coords[1]][1] - COORDS[new_coords[0]][1] == 0)
 
     def check(self, c1, c2, i, num):
+        # Проверка, если в координатах есть * или X,
+        # то возвращает ложь, иначе правду
         if num == 1:
             return (str(self.boardMap.item(c1 + i, c2).text()) == "*" or
                     str(self.boardMap.item(c1 + i, c2).text()) == "X")
         return (str(self.boardMap.item(c1, c2 + i).text()) == "*" or
                 str(self.boardMap.item(c1, c2 + i).text()) == "X")
 
-    def error(self, text="You entered the coordinates incorrectly."):
+    def error(self, text="You entered the coordinates incorrectly."):  # Вызов ошибки
         QMessageBox.critical(self, 'ERROR!', text)
 
-    def setShip(self, coords, num, who):
+    def setShip(self, coords, num, who):  # Создание любого корабля на поле
         error = False
         new_coords = coords.split('-')
         if self.coords_is_right(new_coords, num):
@@ -1132,7 +1167,7 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
         else:
             self.error()
 
-    def setLinkor(self):
+    def setLinkor(self):  # Создание Линкора
         if self.countL == 0:
             self.error("Ships ended")
             return
@@ -1144,7 +1179,7 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
             except BaseException:
                 self.error()
 
-    def setKreyser(self):
+    def setKreyser(self):  # Создание Крейсера
         if self.countK == 0:
             self.error("Ships ended")
             return
@@ -1156,7 +1191,7 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
             except BaseException:
                 self.error()
 
-    def setEsminec(self):
+    def setEsminec(self):  # Создание Есминца
         if self.countE == 0:
             self.error("Ships ended")
             return
@@ -1168,7 +1203,7 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
             except BaseException:
                 self.error()
 
-    def setTorped(self):
+    def setTorped(self):  # Создание торпедной лодки
         if self.countT == 0:
             self.error("Ships ended")
             return
@@ -1197,12 +1232,12 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):  # дописать!
         self.pixmap_enemy_red = QPixmap("images/enemys_board_red.svg")
         self.pixmap_vs = QPixmap("images/vs.svg")
 
-        self.turn = "Player1"
+        self.turn = "Player1"  # Очередь первого игрока
 
         self.map1 = SeaMap(self.tableWidget)
         self.map2 = SeaMap(self.tableWidget_2)
 
-        self.new_boards()
+        self.new_boards()  # Создание игрового поля
 
         self.initUI()
 
@@ -1231,10 +1266,10 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):  # дописать!
         self.tableWidget_2.resizeColumnsToContents()
         self.tableWidget_2.resizeRowsToContents()
 
-    def change_of_course(self):
+    def change_of_course(self):  # Смена хода
         if self.turn == "Player1":
-            self.board2Label.setPixmap(self.pixmap_your_green)
-            self.board1Label.setPixmap(self.pixmap_enemy_red)
+            self.board1Label.setPixmap(self.pixmap_enemy_green)
+            self.board2Label.setPixmap(self.pixmap_your_red)
             self.turn = "Player2"
             players[0], players[1] = players[1], players[0]
         elif self.turn == "Player2":
@@ -1243,10 +1278,14 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):  # дописать!
             self.turn = "Player1"
             players[0], players[1] = players[1], players[0]
 
-    def info(self, text="Your coord is right"):
+    def info(self, text="Your coord is right"):  # Информационное табло
         QMessageBox.information(self, "INFO", text)
 
-    def course(self):
+    def course(self):  # Ход
+        if all(players[0].board[i][j] == 0 for i in range(10) for j in range(10)):
+            self.info(f"WIN {self.turn}!")
+            windows.setCurrentIndex(6)
+            return
         coord, ok = QInputDialog.getText(self, f'{self.turn}', 'Enter coord:\n'
                                                                'Example: A7')
         coord = coord.upper()
@@ -1258,13 +1297,14 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):  # дописать!
         else:
             c1, c2 = COORDS[coord][0], COORDS[coord][1]
             if self.dot_or_notdot(coord):
-                if any(self.hasOne(COORDS[coord], shift) for shift in ((1, 0), (-1, 0), (0, 1), (0, -1))):
+                if any(self.hasOne(COORDS[coord], shift)
+                       for shift in ((1, 0), (-1, 0), (0, 1), (0, -1))):
                     self.info("HIT!")
                     if self.turn[-1] == '1':
                         self.map2.shoot(c1, c2, 'hit')
                     else:
                         self.map1.shoot(c1, c2, 'hit')
-                    players[0].board[c1][c2] = 0
+                    players[1].board[c1][c2] = 0
                     self.course()
                     return
                 else:
@@ -1273,7 +1313,7 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):  # дописать!
                         self.map2.shoot(c1, c2, 'sink')
                     else:
                         self.map1.shoot(c1, c2, 'sink')
-                    players[0].board[c1][c2] = 0
+                    players[1].board[c1][c2] = 0
                     self.course()
                     return
             else:
@@ -1282,21 +1322,19 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):  # дописать!
                     self.map2.shoot(c1, c2, 'miss')
                 else:
                     self.map1.shoot(c1, c2, 'miss')
-            if all(players[0].board[i][j] == 0 for i in range(10) for j in range(10)):
-                self.info(f"WIN {self.turn}!")
-                windows.setCurrentIndex(6)
             self.change_of_course()
 
-    def dot_or_notdot(self, coord):
+    def dot_or_notdot(self, coord):  # Проверка попал, не попал
         con = sqlite3.connect("Players.db")
         cur = con.cursor()
         result = cur.execute(
-            f"""SELECT {coord[0]} FROM Player{players[1].who[-1]} WHERE id={COORDS[coord][0] + 1}""").fetchone()
+            f"""SELECT {coord[0]} FROM Player{players[1].who[-1]}
+            WHERE id={COORDS[coord][0] + 1}""").fetchone()
         if result[0] == "." or result[0] == "*":
             return False
         return True
 
-    def hasOne(self, pos, shift):
+    def hasOne(self, pos, shift):  # Проверка, потопил или ранил
         x, y = pos
         dx, dy = shift
         x += dx
@@ -1308,13 +1346,18 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):  # дописать!
 
 
 class Win_Main(QMainWindow, Ui_MainWindow_win):  # Дописать
+    """Меню выиграша"""
+
     def __init__(self, parent=None):
         super(Win_Main, self).__init__(parent)
         self.setupUi(self)
         self.initUI()
 
     def initUI(self):
-        pass
+        self.pushButton.clicked.connect(QCoreApplication.instance().quit)
+        self.pushButton.setStyleSheet("color: white; background-color: #082567;"
+                                      "border-radius: 20px;")
+        self.label.setText(f"CONGRATULATIONS!")
 
 
 class Player:

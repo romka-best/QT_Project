@@ -54,7 +54,7 @@
                     </font>
                 </property>
                 <property name="text">
-                    <string>Back to start</string>
+                    <string>EXIT</string>
                 </property>
             </widget>
         </widget>
@@ -63,7 +63,7 @@
         <customwidget>
             <class>QVideoWidget</class>
             <extends>QWidget</extends>
-            <header>PyQt5.QtMultimediaWidgets</header>
+            <header location="global">PyQt5.QtMultimediaWidgets</header>
             <container>1</container>
         </customwidget>
     </customwidgets>

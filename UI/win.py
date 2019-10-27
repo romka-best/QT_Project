@@ -39,7 +39,5 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "WIN"))
-        self.pushButton.setText(_translate("MainWindow", "Back to start"))
-
-
+        self.pushButton.setText(_translate("MainWindow", "EXIT"))
 from PyQt5.QtMultimediaWidgets import QVideoWidget

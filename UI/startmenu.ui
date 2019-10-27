@@ -92,32 +92,6 @@
                     </rect>
                 </property>
             </widget>
-            <widget class="QLabel" name="image1">
-                <property name="geometry">
-                    <rect>
-                        <x>0</x>
-                        <y>200</y>
-                        <width>240</width>
-                        <height>161</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string/>
-                </property>
-            </widget>
-            <widget class="QLabel" name="image2">
-                <property name="geometry">
-                    <rect>
-                        <x>720</x>
-                        <y>200</y>
-                        <width>240</width>
-                        <height>161</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string/>
-                </property>
-            </widget>
             <widget class="QLabel" name="logoImage1">
                 <property name="geometry">
                     <rect>
@@ -144,6 +118,26 @@
                     <string/>
                 </property>
             </widget>
+            <widget class="QVideoWidget" name="videoStartMenu_2" native="true">
+                <property name="geometry">
+                    <rect>
+                        <x>740</x>
+                        <y>200</y>
+                        <width>200</width>
+                        <height>150</height>
+                    </rect>
+                </property>
+            </widget>
+            <widget class="QVideoWidget" name="videoStartMenu_1" native="true">
+                <property name="geometry">
+                    <rect>
+                        <x>20</x>
+                        <y>200</y>
+                        <width>200</width>
+                        <height>150</height>
+                    </rect>
+                </property>
+            </widget>
         </widget>
         <widget class="QMenuBar" name="menubar">
             <property name="geometry">
@@ -160,7 +154,7 @@
         <customwidget>
             <class>QVideoWidget</class>
             <extends>QWidget</extends>
-            <header>PyQt5.QtMultimediaWidgets</header>
+            <header location="global">PyQt5.QtMultimediaWidgets</header>
             <container>1</container>
         </customwidget>
     </customwidgets>
