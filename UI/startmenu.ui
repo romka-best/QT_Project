@@ -14,130 +14,121 @@
             <string>StartMenu</string>
         </property>
         <widget class="QWidget" name="centralwidget">
-            <widget class="QWidget" name="verticalLayoutWidget">
-                <property name="geometry">
-                    <rect>
-                        <x>240</x>
-                        <y>100</y>
-                        <width>481</width>
-                        <height>411</height>
-                    </rect>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout">
-                    <item>
-                        <widget class="QPushButton" name="startButton">
-                            <property name="font">
-                                <font>
-                                    <pointsize>36</pointsize>
-                                    <weight>75</weight>
-                                    <bold>true</bold>
-                                </font>
-                            </property>
-                            <property name="text">
-                                <string>START</string>
-                            </property>
-                        </widget>
-                    </item>
-                    <item>
-                        <widget class="QPushButton" name="rulesButton">
-                            <property name="font">
-                                <font>
-                                    <pointsize>36</pointsize>
-                                    <weight>75</weight>
-                                    <bold>true</bold>
-                                </font>
-                            </property>
-                            <property name="text">
-                                <string>RULES</string>
-                            </property>
-                        </widget>
-                    </item>
-                    <item>
-                        <widget class="QPushButton" name="settingsButton">
-                            <property name="font">
-                                <font>
-                                    <pointsize>36</pointsize>
-                                    <weight>75</weight>
-                                    <bold>true</bold>
-                                </font>
-                            </property>
-                            <property name="text">
-                                <string>SETTINGS</string>
-                            </property>
-                        </widget>
-                    </item>
-                    <item>
-                        <widget class="QPushButton" name="exitButton">
-                            <property name="font">
-                                <font>
-                                    <pointsize>36</pointsize>
-                                    <weight>75</weight>
-                                    <bold>true</bold>
-                                </font>
-                            </property>
-                            <property name="text">
-                                <string>EXIT</string>
-                            </property>
-                        </widget>
-                    </item>
-                </layout>
-            </widget>
-            <widget class="QVideoWidget" name="videoStartMenu" native="true">
-                <property name="geometry">
-                    <rect>
-                        <x>0</x>
-                        <y>0</y>
-                        <width>961</width>
-                        <height>100</height>
-                    </rect>
-                </property>
-            </widget>
-            <widget class="QLabel" name="logoImage1">
-                <property name="geometry">
-                    <rect>
-                        <x>0</x>
-                        <y>0</y>
-                        <width>100</width>
-                        <height>100</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string/>
-                </property>
-            </widget>
-            <widget class="QLabel" name="logoImage2">
-                <property name="geometry">
-                    <rect>
-                        <x>860</x>
-                        <y>0</y>
-                        <width>100</width>
-                        <height>100</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string/>
-                </property>
-            </widget>
-            <widget class="QVideoWidget" name="videoStartMenu_2" native="true">
-                <property name="geometry">
-                    <rect>
-                        <x>740</x>
-                        <y>200</y>
-                        <width>200</width>
-                        <height>150</height>
-                    </rect>
-                </property>
-            </widget>
-            <widget class="QVideoWidget" name="videoStartMenu_1" native="true">
-                <property name="geometry">
-                    <rect>
-                        <x>20</x>
-                        <y>200</y>
-                        <width>200</width>
-                        <height>150</height>
-                    </rect>
-                </property>
-            </widget>
+            <layout class="QGridLayout" name="gridLayout">
+                <item row="1" column="0" colspan="3">
+                    <widget class="QVideoWidget" name="videoStartMenu_1" native="true"/>
+                </item>
+                <item row="1" column="4" colspan="3">
+                    <widget class="QVideoWidget" name="videoStartMenu_2" native="true"/>
+                </item>
+                <item row="1" column="3">
+                    <layout class="QVBoxLayout" name="verticalLayout">
+                        <item>
+                            <widget class="QPushButton" name="startButton">
+                                <property name="font">
+                                    <font>
+                                        <pointsize>36</pointsize>
+                                        <weight>75</weight>
+                                        <bold>true</bold>
+                                    </font>
+                                </property>
+                                <property name="text">
+                                    <string>START</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item>
+                            <widget class="QPushButton" name="rulesButton">
+                                <property name="font">
+                                    <font>
+                                        <pointsize>36</pointsize>
+                                        <weight>75</weight>
+                                        <bold>true</bold>
+                                    </font>
+                                </property>
+                                <property name="text">
+                                    <string>RULES</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item>
+                            <widget class="QPushButton" name="settingsButton">
+                                <property name="font">
+                                    <font>
+                                        <pointsize>36</pointsize>
+                                        <weight>75</weight>
+                                        <bold>true</bold>
+                                    </font>
+                                </property>
+                                <property name="text">
+                                    <string>SETTINGS</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item>
+                            <widget class="QPushButton" name="exitButton">
+                                <property name="font">
+                                    <font>
+                                        <pointsize>36</pointsize>
+                                        <weight>75</weight>
+                                        <bold>true</bold>
+                                    </font>
+                                </property>
+                                <property name="text">
+                                    <string>EXIT</string>
+                                </property>
+                            </widget>
+                        </item>
+                    </layout>
+                </item>
+                <item row="0" column="5">
+                    <spacer name="horizontalSpacer_2">
+                        <property name="orientation">
+                            <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                            <size>
+                                <width>40</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </item>
+                <item row="0" column="3">
+                    <widget class="QLabel" name="label">
+                        <property name="text">
+                            <string/>
+                        </property>
+                    </widget>
+                </item>
+                <item row="0" column="6">
+                    <widget class="QLabel" name="logoImage2">
+                        <property name="text">
+                            <string/>
+                        </property>
+                    </widget>
+                </item>
+                <item row="0" column="0">
+                    <widget class="QLabel" name="logoImage1">
+                        <property name="text">
+                            <string/>
+                        </property>
+                    </widget>
+                </item>
+                <item row="0" column="1">
+                    <spacer name="horizontalSpacer">
+                        <property name="orientation">
+                            <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                            <size>
+                                <width>40</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </item>
+            </layout>
         </widget>
         <widget class="QMenuBar" name="menubar">
             <property name="geometry">
@@ -154,7 +145,7 @@
         <customwidget>
             <class>QVideoWidget</class>
             <extends>QWidget</extends>
-            <header location="global">PyQt5.QtMultimediaWidgets</header>
+            <header>PyQt5.QtMultimediaWidgets</header>
             <container>1</container>
         </customwidget>
     </customwidgets>

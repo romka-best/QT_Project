@@ -14,48 +14,47 @@
             <string>Loading</string>
         </property>
         <widget class="QWidget" name="centralwidget">
-            <widget class="QProgressBar" name="progressBar">
-                <property name="geometry">
-                    <rect>
-                        <x>0</x>
-                        <y>170</y>
-                        <width>961</width>
-                        <height>101</height>
-                    </rect>
-                </property>
-                <property name="value">
-                    <number>0</number>
-                </property>
-            </widget>
-            <widget class="QVideoWidget" name="widget" native="true">
-                <property name="geometry">
-                    <rect>
-                        <x>0</x>
-                        <y>0</y>
-                        <width>961</width>
-                        <height>101</height>
-                    </rect>
-                </property>
-            </widget>
-            <widget class="QPushButton" name="pushButton">
-                <property name="geometry">
-                    <rect>
-                        <x>0</x>
-                        <y>360</y>
-                        <width>961</width>
-                        <height>181</height>
-                    </rect>
-                </property>
-                <property name="font">
-                    <font>
-                        <family>Elephant</family>
-                        <pointsize>44</pointsize>
-                    </font>
-                </property>
-                <property name="text">
-                    <string>BEST PRODUCTIONS</string>
-                </property>
-            </widget>
+            <layout class="QVBoxLayout" name="verticalLayout">
+                <item>
+                    <widget class="QVideoWidget" name="widget" native="true">
+                        <property name="enabled">
+                            <bool>true</bool>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>0</width>
+                                <height>0</height>
+                            </size>
+                        </property>
+                    </widget>
+                </item>
+                <item>
+                    <widget class="QProgressBar" name="progressBar">
+                        <property name="minimumSize">
+                            <size>
+                                <width>0</width>
+                                <height>0</height>
+                            </size>
+                        </property>
+                        <property name="value">
+                            <number>0</number>
+                        </property>
+                    </widget>
+                </item>
+                <item>
+                    <widget class="QPushButton" name="pushButton">
+                        <property name="font">
+                            <font>
+                                <family>Elephant</family>
+                                <pointsize>44</pointsize>
+                            </font>
+                        </property>
+                        <property name="text">
+                            <string>BEST PRODUCTIONS</string>
+                        </property>
+                    </widget>
+                </item>
+            </layout>
         </widget>
     </widget>
     <customwidgets>

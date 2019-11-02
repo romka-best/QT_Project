@@ -117,10 +117,11 @@ COORDS = {
 }
 players = []
 
-"""Не работают настройки
-Отстутствуют некоторые видео и аудио
+"""Отстутствуют некоторые видео и аудио
 Код не до конца оптимизирован
-Проект готов на 85%"""
+Проект готов на 90%
+Добавить счётчик, проверка есть ли там значение
+Доработать layouts"""
 
 
 class Ui_MainWindow_loading(object):  # loading.py
@@ -131,20 +132,25 @@ class Ui_MainWindow_loading(object):  # loading.py
         mainWindow.resize(960, 540)
         self.centralwidget = QtWidgets.QWidget(mainWindow)
         self.centralwidget.setObjectName("centralwidget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.widget = QVideoWidget(self.centralwidget)
+        self.widget.setEnabled(True)
+        self.widget.setMinimumSize(QtCore.QSize(0, 0))
+        self.widget.setObjectName("widget")
+        self.verticalLayout.addWidget(self.widget)
         self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
-        self.progressBar.setGeometry(QtCore.QRect(0, 170, 961, 101))
+        self.progressBar.setMinimumSize(QtCore.QSize(0, 0))
         self.progressBar.setProperty("value", 0)
         self.progressBar.setObjectName("progressBar")
-        self.widget = QVideoWidget(self.centralwidget)
-        self.widget.setGeometry(QtCore.QRect(0, 0, 961, 101))
-        self.widget.setObjectName("widget")
+        self.verticalLayout.addWidget(self.progressBar)
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(0, 360, 961, 181))
         font = QtGui.QFont()
         font.setFamily("Elephant")
         font.setPointSize(44)
         self.pushButton.setFont(font)
         self.pushButton.setObjectName("pushButton")
+        self.verticalLayout.addWidget(self.pushButton)
         mainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(mainWindow)
@@ -164,13 +170,17 @@ class Ui_MainWindow_startmenu(object):  # startmenu.py
         MainWindow.resize(960, 540)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(240, 100, 481, 411))
-        self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
+        self.gridLayout.setObjectName("gridLayout")
+        self.videoStartMenu_1 = QVideoWidget(self.centralwidget)
+        self.videoStartMenu_1.setObjectName("videoStartMenu_1")
+        self.gridLayout.addWidget(self.videoStartMenu_1, 1, 0, 1, 3)
+        self.videoStartMenu_2 = QVideoWidget(self.centralwidget)
+        self.videoStartMenu_2.setObjectName("videoStartMenu_2")
+        self.gridLayout.addWidget(self.videoStartMenu_2, 1, 4, 1, 3)
+        self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
-        self.startButton = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.startButton = QtWidgets.QPushButton(self.centralwidget)
         font = QtGui.QFont()
         font.setPointSize(36)
         font.setBold(True)
@@ -178,7 +188,7 @@ class Ui_MainWindow_startmenu(object):  # startmenu.py
         self.startButton.setFont(font)
         self.startButton.setObjectName("startButton")
         self.verticalLayout.addWidget(self.startButton)
-        self.rulesButton = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.rulesButton = QtWidgets.QPushButton(self.centralwidget)
         font = QtGui.QFont()
         font.setPointSize(36)
         font.setBold(True)
@@ -186,7 +196,7 @@ class Ui_MainWindow_startmenu(object):  # startmenu.py
         self.rulesButton.setFont(font)
         self.rulesButton.setObjectName("rulesButton")
         self.verticalLayout.addWidget(self.rulesButton)
-        self.settingsButton = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.settingsButton = QtWidgets.QPushButton(self.centralwidget)
         font = QtGui.QFont()
         font.setPointSize(36)
         font.setBold(True)
@@ -194,7 +204,7 @@ class Ui_MainWindow_startmenu(object):  # startmenu.py
         self.settingsButton.setFont(font)
         self.settingsButton.setObjectName("settingsButton")
         self.verticalLayout.addWidget(self.settingsButton)
-        self.exitButton = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.exitButton = QtWidgets.QPushButton(self.centralwidget)
         font = QtGui.QFont()
         font.setPointSize(36)
         font.setBold(True)
@@ -202,23 +212,23 @@ class Ui_MainWindow_startmenu(object):  # startmenu.py
         self.exitButton.setFont(font)
         self.exitButton.setObjectName("exitButton")
         self.verticalLayout.addWidget(self.exitButton)
-        self.videoStartMenu = QVideoWidget(self.centralwidget)
-        self.videoStartMenu.setGeometry(QtCore.QRect(0, 0, 961, 100))
-        self.videoStartMenu.setObjectName("videoStartMenu")
-        self.logoImage1 = QtWidgets.QLabel(self.centralwidget)
-        self.logoImage1.setGeometry(QtCore.QRect(0, 0, 100, 100))
-        self.logoImage1.setText("")
-        self.logoImage1.setObjectName("logoImage1")
+        self.gridLayout.addLayout(self.verticalLayout, 1, 3, 1, 1)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem, 0, 5, 1, 1)
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setText("")
+        self.label.setObjectName("label")
+        self.gridLayout.addWidget(self.label, 0, 3, 1, 1)
         self.logoImage2 = QtWidgets.QLabel(self.centralwidget)
-        self.logoImage2.setGeometry(QtCore.QRect(860, 0, 100, 100))
         self.logoImage2.setText("")
         self.logoImage2.setObjectName("logoImage2")
-        self.videoStartMenu_2 = QVideoWidget(self.centralwidget)
-        self.videoStartMenu_2.setGeometry(QtCore.QRect(740, 200, 200, 150))
-        self.videoStartMenu_2.setObjectName("videoStartMenu_2")
-        self.videoStartMenu_1 = QVideoWidget(self.centralwidget)
-        self.videoStartMenu_1.setGeometry(QtCore.QRect(20, 200, 200, 150))
-        self.videoStartMenu_1.setObjectName("videoStartMenu_1")
+        self.gridLayout.addWidget(self.logoImage2, 0, 6, 1, 1)
+        self.logoImage1 = QtWidgets.QLabel(self.centralwidget)
+        self.logoImage1.setText("")
+        self.logoImage1.setObjectName("logoImage1")
+        self.gridLayout.addWidget(self.logoImage1, 0, 0, 1, 1)
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem1, 0, 1, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 960, 26))
@@ -245,34 +255,20 @@ class Ui_MainWindow_settings(object):  # settings.py
         MainWindow.resize(960, 540)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.backButton = QtWidgets.QPushButton(self.centralwidget)
-        self.backButton.setGeometry(QtCore.QRect(0, 0, 271, 61))
-        font = QtGui.QFont()
-        font.setPointSize(24)
-        self.backButton.setFont(font)
-        self.backButton.setObjectName("backButton")
-        self.gridLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.gridLayoutWidget.setGeometry(QtCore.QRect(270, 60, 691, 451))
-        self.gridLayoutWidget.setObjectName("gridLayoutWidget")
-        self.gridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
-        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout_2 = QtWidgets.QGridLayout(self.centralwidget)
+        self.gridLayout_2.setObjectName("gridLayout_2")
+        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.gridLayout_2.addItem(spacerItem, 1, 0, 1, 1)
+        self.gridLayout = QtWidgets.QGridLayout()
         self.gridLayout.setObjectName("gridLayout")
-        self.radiopve = QtWidgets.QRadioButton(self.gridLayoutWidget)
-        font = QtGui.QFont()
-        font.setPointSize(24)
-        self.radiopve.setFont(font)
-        self.radiopve.setChecked(False)
-        self.radiopve.setObjectName("radiopve")
-        self.gridLayout.addWidget(self.radiopve, 1, 0, 1, 1)
-        self.comboBox = QtWidgets.QComboBox(self.gridLayoutWidget)
+        self.comboBox = QtWidgets.QComboBox(self.centralwidget)
         font = QtGui.QFont()
         font.setPointSize(24)
         self.comboBox.setFont(font)
         self.comboBox.setObjectName("comboBox")
         self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.gridLayout.addWidget(self.comboBox, 3, 0, 1, 1)
-        self.saveButton = QtWidgets.QPushButton(self.gridLayoutWidget)
+        self.gridLayout.addWidget(self.comboBox, 2, 0, 1, 1)
+        self.saveButton = QtWidgets.QPushButton(self.centralwidget)
         font = QtGui.QFont()
         font.setPointSize(36)
         font.setBold(True)
@@ -280,26 +276,31 @@ class Ui_MainWindow_settings(object):  # settings.py
         font.setWeight(75)
         self.saveButton.setFont(font)
         self.saveButton.setObjectName("saveButton")
-        self.gridLayout.addWidget(self.saveButton, 4, 0, 1, 1)
-        self.radiopvp = QtWidgets.QRadioButton(self.gridLayoutWidget)
+        self.gridLayout.addWidget(self.saveButton, 3, 0, 1, 1)
+        self.radiopvp = QtWidgets.QRadioButton(self.centralwidget)
         font = QtGui.QFont()
         font.setPointSize(24)
         self.radiopvp.setFont(font)
         self.radiopvp.setChecked(True)
         self.radiopvp.setObjectName("radiopvp")
         self.gridLayout.addWidget(self.radiopvp, 0, 0, 1, 1)
-        self.videoSettings = QVideoWidget(self.centralwidget)
-        self.videoSettings.setGeometry(QtCore.QRect(0, 60, 271, 451))
-        self.videoSettings.setObjectName("videoSettings")
+        self.gridLayout_2.addLayout(self.gridLayout, 2, 1, 2, 1)
         self.logoImage = QtWidgets.QLabel(self.centralwidget)
-        self.logoImage.setGeometry(QtCore.QRect(270, 0, 691, 61))
         self.logoImage.setText("")
         self.logoImage.setObjectName("logoImage")
+        self.gridLayout_2.addWidget(self.logoImage, 0, 1, 1, 1)
+        self.backButton = QtWidgets.QPushButton(self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(24)
+        self.backButton.setFont(font)
+        self.backButton.setObjectName("backButton")
+        self.gridLayout_2.addWidget(self.backButton, 0, 0, 1, 1)
+        self.videoSettings = QVideoWidget(self.centralwidget)
+        self.videoSettings.setObjectName("videoSettings")
+        self.gridLayout_2.addWidget(self.videoSettings, 3, 0, 1, 1)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.gridLayout_2.addItem(spacerItem1, 4, 1, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 960, 26))
-        self.menubar.setObjectName("menubar")
-        MainWindow.setMenuBar(self.menubar)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -307,12 +308,10 @@ class Ui_MainWindow_settings(object):  # settings.py
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Settings"))
-        self.backButton.setText(_translate("MainWindow", "<----- Back"))
-        self.radiopve.setText(_translate("MainWindow", "PVE"))
         self.comboBox.setItemText(0, _translate("MainWindow", "ENGLISH"))
-        self.comboBox.setItemText(1, _translate("MainWindow", "RUSSIAN"))
         self.saveButton.setText(_translate("MainWindow", "SAVE"))
         self.radiopvp.setText(_translate("MainWindow", "PVP"))
+        self.backButton.setText(_translate("MainWindow", "<----- Back"))
 
 
 class Ui_MainWindow_rules(object):  # rules.py
@@ -320,31 +319,29 @@ class Ui_MainWindow_rules(object):  # rules.py
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(960, 540)
+        MainWindow.resize(841, 540)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+        self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
+        self.gridLayout.setObjectName("gridLayout")
         self.backButton = QtWidgets.QPushButton(self.centralwidget)
-        self.backButton.setGeometry(QtCore.QRect(0, 0, 271, 61))
         font = QtGui.QFont()
         font.setPointSize(24)
         self.backButton.setFont(font)
         self.backButton.setObjectName("backButton")
+        self.gridLayout.addWidget(self.backButton, 0, 0, 1, 1)
         self.logoImage = QtWidgets.QLabel(self.centralwidget)
-        self.logoImage.setGeometry(QtCore.QRect(270, 0, 691, 61))
         self.logoImage.setText("")
         self.logoImage.setObjectName("logoImage")
+        self.gridLayout.addWidget(self.logoImage, 0, 1, 1, 1)
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(0, 60, 961, 451))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label.setFont(font)
         self.label.setText("")
         self.label.setObjectName("label")
+        self.gridLayout.addWidget(self.label, 1, 0, 1, 2)
         MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 960, 26))
-        self.menubar.setObjectName("menubar")
-        MainWindow.setMenuBar(self.menubar)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -360,11 +357,27 @@ class Ui_MainWindow_ready(object):  # readygame.py
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(960, 540)
+        MainWindow.resize(961, 550)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+        self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
+        self.gridLayout.setObjectName("gridLayout")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.playerLabel = QtWidgets.QLabel(self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        self.playerLabel.setFont(font)
+        self.playerLabel.setObjectName("playerLabel")
+        self.horizontalLayout_2.addWidget(self.playerLabel)
+        self.gridLayout.addLayout(self.horizontalLayout_2, 0, 0, 1, 1)
+        self.readyButton = QtWidgets.QPushButton(self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(24)
+        self.readyButton.setFont(font)
+        self.readyButton.setObjectName("readyButton")
+        self.gridLayout.addWidget(self.readyButton, 0, 1, 1, 2)
         self.boardMap = QtWidgets.QTableWidget(self.centralwidget)
-        self.boardMap.setGeometry(QtCore.QRect(0, 50, 531, 461))
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(True)
@@ -415,79 +428,62 @@ class Ui_MainWindow_ready(object):  # readygame.py
         self.boardMap.setHorizontalHeaderItem(8, item)
         item = QtWidgets.QTableWidgetItem()
         self.boardMap.setHorizontalHeaderItem(9, item)
-        self.horizontalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(0, 0, 531, 51))
-        self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
-        self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.playerLabel = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        font = QtGui.QFont()
-        font.setPointSize(16)
-        self.playerLabel.setFont(font)
-        self.playerLabel.setObjectName("playerLabel")
-        self.horizontalLayout_2.addWidget(self.playerLabel)
-        self.readyButton = QtWidgets.QPushButton(self.centralwidget)
-        self.readyButton.setGeometry(QtCore.QRect(530, 0, 431, 51))
-        font = QtGui.QFont()
-        font.setPointSize(24)
-        self.readyButton.setFont(font)
-        self.readyButton.setObjectName("readyButton")
-        self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(530, 50, 261, 461))
-        self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout.addWidget(self.boardMap, 1, 0, 1, 1)
+        self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
-        self.linkorImage = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.linkorImage = QtWidgets.QLabel(self.centralwidget)
         self.linkorImage.setText("")
         self.linkorImage.setObjectName("linkorImage")
         self.verticalLayout.addWidget(self.linkorImage)
-        self.kreyserImage = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.kreyserImage = QtWidgets.QLabel(self.centralwidget)
         self.kreyserImage.setText("")
         self.kreyserImage.setObjectName("kreyserImage")
         self.verticalLayout.addWidget(self.kreyserImage)
-        self.esminecImage = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.esminecImage = QtWidgets.QLabel(self.centralwidget)
         self.esminecImage.setText("")
         self.esminecImage.setObjectName("esminecImage")
         self.verticalLayout.addWidget(self.esminecImage)
-        self.torpedImage = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.torpedImage = QtWidgets.QLabel(self.centralwidget)
         self.torpedImage.setText("")
         self.torpedImage.setObjectName("torpedImage")
         self.verticalLayout.addWidget(self.torpedImage)
-        self.verticalLayoutWidget_2 = QtWidgets.QWidget(self.centralwidget)
-        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(790, 50, 171, 461))
-        self.verticalLayoutWidget_2.setObjectName("verticalLayoutWidget_2")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_2)
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout.addLayout(self.verticalLayout, 1, 1, 1, 1)
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout()
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.linkorButton = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
+        self.linkorButton = QtWidgets.QPushButton(self.centralwidget)
         font = QtGui.QFont()
         font.setPointSize(10)
+        font.setItalic(False)
+        font.setStrikeOut(False)
         self.linkorButton.setFont(font)
         self.linkorButton.setObjectName("linkorButton")
         self.verticalLayout_2.addWidget(self.linkorButton)
-        self.kreyserButton = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
+        self.kreyserButton = QtWidgets.QPushButton(self.centralwidget)
         font = QtGui.QFont()
         font.setPointSize(10)
+        font.setItalic(False)
         self.kreyserButton.setFont(font)
         self.kreyserButton.setObjectName("kreyserButton")
         self.verticalLayout_2.addWidget(self.kreyserButton)
-        self.esminecButton = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
+        self.esminecButton = QtWidgets.QPushButton(self.centralwidget)
         font = QtGui.QFont()
         font.setPointSize(10)
+        font.setItalic(False)
         self.esminecButton.setFont(font)
         self.esminecButton.setObjectName("esminecButton")
         self.verticalLayout_2.addWidget(self.esminecButton)
-        self.torpedButton = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
+        self.torpedButton = QtWidgets.QPushButton(self.centralwidget)
         font = QtGui.QFont()
         font.setPointSize(10)
+        font.setItalic(False)
+        font.setStrikeOut(False)
         self.torpedButton.setFont(font)
         self.torpedButton.setObjectName("torpedButton")
         self.verticalLayout_2.addWidget(self.torpedButton)
+        self.gridLayout.addLayout(self.verticalLayout_2, 1, 2, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 960, 26))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 961, 26))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
 
@@ -497,6 +493,8 @@ class Ui_MainWindow_ready(object):  # readygame.py
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.playerLabel.setText(_translate("MainWindow", "PLAYER1"))
+        self.readyButton.setText(_translate("MainWindow", "I am ready"))
         item = self.boardMap.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "1"))
         item = self.boardMap.verticalHeaderItem(1)
@@ -537,8 +535,6 @@ class Ui_MainWindow_ready(object):  # readygame.py
         item.setText(_translate("MainWindow", "I"))
         item = self.boardMap.horizontalHeaderItem(9)
         item.setText(_translate("MainWindow", "J"))
-        self.playerLabel.setText(_translate("MainWindow", "PLAYER1"))
-        self.readyButton.setText(_translate("MainWindow", "I am ready"))
         self.linkorButton.setText(_translate("MainWindow", "Choose where to put"))
         self.kreyserButton.setText(_translate("MainWindow", "Choose where to put"))
         self.esminecButton.setText(_translate("MainWindow", "Choose where to put"))
@@ -550,11 +546,62 @@ class Ui_MainWindow_pvp(object):  # gamepvp.py
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(960, 540)
+        MainWindow.resize(960, 577)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+        self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
+        self.gridLayout.setObjectName("gridLayout")
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.board1Label = QtWidgets.QLabel(self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        self.board1Label.setFont(font)
+        self.board1Label.setObjectName("board1Label")
+        self.horizontalLayout.addWidget(self.board1Label)
+        self.linkorP1 = QtWidgets.QLabel(self.centralwidget)
+        self.linkorP1.setText("")
+        self.linkorP1.setObjectName("linkorP1")
+        self.horizontalLayout.addWidget(self.linkorP1)
+        self.kreyserP1 = QtWidgets.QLabel(self.centralwidget)
+        self.kreyserP1.setText("")
+        self.kreyserP1.setObjectName("kreyserP1")
+        self.horizontalLayout.addWidget(self.kreyserP1)
+        self.esminecP1 = QtWidgets.QLabel(self.centralwidget)
+        self.esminecP1.setText("")
+        self.esminecP1.setObjectName("esminecP1")
+        self.horizontalLayout.addWidget(self.esminecP1)
+        self.torpedP1 = QtWidgets.QLabel(self.centralwidget)
+        self.torpedP1.setText("")
+        self.torpedP1.setObjectName("torpedP1")
+        self.horizontalLayout.addWidget(self.torpedP1)
+        self.gridLayout.addLayout(self.horizontalLayout, 0, 0, 1, 1)
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.linkorP2 = QtWidgets.QLabel(self.centralwidget)
+        self.linkorP2.setText("")
+        self.linkorP2.setObjectName("linkorP2")
+        self.horizontalLayout_2.addWidget(self.linkorP2)
+        self.kreyserP2 = QtWidgets.QLabel(self.centralwidget)
+        self.kreyserP2.setText("")
+        self.kreyserP2.setObjectName("kreyserP2")
+        self.horizontalLayout_2.addWidget(self.kreyserP2)
+        self.esminecP2 = QtWidgets.QLabel(self.centralwidget)
+        self.esminecP2.setText("")
+        self.esminecP2.setObjectName("esminecP2")
+        self.horizontalLayout_2.addWidget(self.esminecP2)
+        self.torpedP2 = QtWidgets.QLabel(self.centralwidget)
+        self.torpedP2.setText("")
+        self.torpedP2.setObjectName("torpedP2")
+        self.horizontalLayout_2.addWidget(self.torpedP2)
+        self.board2Label = QtWidgets.QLabel(self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        self.board2Label.setFont(font)
+        self.board2Label.setObjectName("board2Label")
+        self.horizontalLayout_2.addWidget(self.board2Label)
+        self.gridLayout.addLayout(self.horizontalLayout_2, 0, 5, 1, 1)
         self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
-        self.tableWidget.setGeometry(QtCore.QRect(0, 50, 441, 461))
         self.tableWidget.setMinimumSize(QtCore.QSize(441, 461))
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(10)
@@ -599,8 +646,18 @@ class Ui_MainWindow_pvp(object):  # gamepvp.py
         self.tableWidget.setHorizontalHeaderItem(8, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(9, item)
+        self.gridLayout.addWidget(self.tableWidget, 1, 0, 1, 3)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem, 0, 1, 1, 1)
+        self.vsLable = QtWidgets.QLabel(self.centralwidget)
+        font = QtGui.QFont()
+        font.setFamily("Digital Counter 7")
+        font.setPointSize(36)
+        self.vsLable.setFont(font)
+        self.vsLable.setText("")
+        self.vsLable.setObjectName("vsLable")
+        self.gridLayout.addWidget(self.vsLable, 0, 2, 1, 2)
         self.tableWidget_2 = QtWidgets.QTableWidget(self.centralwidget)
-        self.tableWidget_2.setGeometry(QtCore.QRect(520, 50, 441, 461))
         self.tableWidget_2.setMinimumSize(QtCore.QSize(441, 461))
         self.tableWidget_2.setObjectName("tableWidget_2")
         self.tableWidget_2.setColumnCount(10)
@@ -645,82 +702,9 @@ class Ui_MainWindow_pvp(object):  # gamepvp.py
         self.tableWidget_2.setHorizontalHeaderItem(8, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_2.setHorizontalHeaderItem(9, item)
-        self.vsLable = QtWidgets.QLabel(self.centralwidget)
-        self.vsLable.setGeometry(QtCore.QRect(440, 230, 81, 61))
-        font = QtGui.QFont()
-        font.setFamily("Digital Counter 7")
-        font.setPointSize(36)
-        self.vsLable.setFont(font)
-        self.vsLable.setText("")
-        self.vsLable.setObjectName("vsLable")
-        self.horizontalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(0, 0, 441, 51))
-        self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.board1Label = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        font = QtGui.QFont()
-        font.setPointSize(16)
-        self.board1Label.setFont(font)
-        self.board1Label.setObjectName("board1Label")
-        self.horizontalLayout.addWidget(self.board1Label)
-        self.linkorP1 = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        self.linkorP1.setText("")
-        self.linkorP1.setObjectName("linkorP1")
-        self.horizontalLayout.addWidget(self.linkorP1)
-        self.kreyserP1 = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        self.kreyserP1.setText("")
-        self.kreyserP1.setObjectName("kreyserP1")
-        self.horizontalLayout.addWidget(self.kreyserP1)
-        self.esminecP1 = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        self.esminecP1.setText("")
-        self.esminecP1.setObjectName("esminecP1")
-        self.horizontalLayout.addWidget(self.esminecP1)
-        self.torpedP1 = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        self.torpedP1.setText("")
-        self.torpedP1.setObjectName("torpedP1")
-        self.horizontalLayout.addWidget(self.torpedP1)
-        self.horizontalLayoutWidget_2 = QtWidgets.QWidget(self.centralwidget)
-        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(520, 0, 441, 51))
-        self.horizontalLayoutWidget_2.setObjectName("horizontalLayoutWidget_2")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_2)
-        self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.board2Label = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
-        font = QtGui.QFont()
-        font.setPointSize(16)
-        self.board2Label.setFont(font)
-        self.board2Label.setObjectName("board2Label")
-        self.horizontalLayout_2.addWidget(self.board2Label)
-        self.linkorP2 = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
-        self.linkorP2.setText("")
-        self.linkorP2.setObjectName("linkorP2")
-        self.horizontalLayout_2.addWidget(self.linkorP2)
-        self.kreyserP2 = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
-        self.kreyserP2.setText("")
-        self.kreyserP2.setObjectName("kreyserP2")
-        self.horizontalLayout_2.addWidget(self.kreyserP2)
-        self.esminecP2 = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
-        self.esminecP2.setText("")
-        self.esminecP2.setObjectName("esminecP2")
-        self.horizontalLayout_2.addWidget(self.esminecP2)
-        self.torpedP2 = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
-        self.torpedP2.setText("")
-        self.torpedP2.setObjectName("torpedP2")
-        self.horizontalLayout_2.addWidget(self.torpedP2)
-        self.labelWho = QtWidgets.QLabel(self.centralwidget)
-        self.labelWho.setGeometry(QtCore.QRect(440, 0, 81, 51))
-        self.labelWho.setText("")
-        self.labelWho.setObjectName("labelWho")
-        self.courseButton = QtWidgets.QPushButton(self.centralwidget)
-        self.courseButton.setGeometry(QtCore.QRect(440, 50, 81, 181))
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        font.setBold(True)
-        font.setWeight(75)
-        self.courseButton.setFont(font)
-        self.courseButton.setObjectName("courseButton")
+        self.gridLayout.addWidget(self.tableWidget_2, 1, 3, 1, 3)
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem1, 0, 4, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 960, 26))
@@ -733,6 +717,8 @@ class Ui_MainWindow_pvp(object):  # gamepvp.py
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Game PVP"))
+        self.board1Label.setText(_translate("MainWindow", "Your board"))
+        self.board2Label.setText(_translate("MainWindow", "Enemy\'s board"))
         item = self.tableWidget.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "1"))
         item = self.tableWidget.verticalHeaderItem(1)
@@ -813,9 +799,6 @@ class Ui_MainWindow_pvp(object):  # gamepvp.py
         item.setText(_translate("MainWindow", "I"))
         item = self.tableWidget_2.horizontalHeaderItem(9)
         item.setText(_translate("MainWindow", "J"))
-        self.board1Label.setText(_translate("MainWindow", "Your board"))
-        self.board2Label.setText(_translate("MainWindow", "Enemy\'s board"))
-        self.courseButton.setText(_translate("MainWindow", "Course"))
 
 
 class Ui_MainWindow_win(object):
@@ -826,21 +809,23 @@ class Ui_MainWindow_win(object):
         MainWindow.resize(960, 540)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.widget = QVideoWidget(self.centralwidget)
+        self.widget.setObjectName("widget")
+        self.verticalLayout.addWidget(self.widget)
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(100, 180, 760, 131))
         self.label.setText("")
         self.label.setObjectName("label")
-        self.widget = QVideoWidget(self.centralwidget)
-        self.widget.setGeometry(QtCore.QRect(230, 0, 510, 100))
-        self.widget.setObjectName("widget")
+        self.verticalLayout.addWidget(self.label)
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(230, 320, 510, 100))
         font = QtGui.QFont()
         font.setPointSize(24)
         font.setBold(True)
         font.setWeight(75)
         self.pushButton.setFont(font)
         self.pushButton.setObjectName("pushButton")
+        self.verticalLayout.addWidget(self.pushButton)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -850,6 +835,24 @@ class Ui_MainWindow_win(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "WIN"))
         self.pushButton.setText(_translate("MainWindow", "EXIT"))
+
+
+def new_cell_mul():
+    cell_mul = QTableWidgetItem("*")
+    cell_mul.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+    return cell_mul
+
+
+def new_cell_x():
+    cell_x = QTableWidgetItem("X")
+    cell_x.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+    return cell_x
+
+
+def new_cell_dot():
+    cell_dot = QTableWidgetItem(".")
+    cell_dot.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+    return cell_dot
 
 
 class Loading_Main(QMainWindow, Ui_MainWindow_loading):
@@ -901,13 +904,16 @@ class Startmenu_Main(QMainWindow, Ui_MainWindow_startmenu):  # Нужно вст
         self.setupUi(self)
 
         self.LOGOBP = QPixmap("images/logobp.svg")
-        self.mediaplayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
+        self.LOGOSB = QPixmap("images/logosb.svg")
+        self.mediaplayer1 = QMediaPlayer(None, QMediaPlayer.VideoSurface)
+        self.mediaplayer2 = QMediaPlayer(None, QMediaPlayer.VideoSurface)
 
         self.initUI()
 
     def initUI(self):
         self.logoImage1.setPixmap(self.LOGOBP)
         self.logoImage2.setPixmap(self.LOGOBP)
+        self.label.setPixmap(self.LOGOSB)
 
         self.load_mp4("videos/animation800.gif")
 
@@ -929,9 +935,14 @@ class Startmenu_Main(QMainWindow, Ui_MainWindow_startmenu):  # Нужно вст
     def load_mp4(self, filename):  # Загрузка GIF-файла
         media = QtCore.QUrl.fromLocalFile(filename)
         content = QMediaContent(media)
-        self.mediaplayer.setMedia(content)
-        self.mediaplayer.play()
-        self.mediaplayer.setVideoOutput(self.videoStartMenu_1)
+
+        self.mediaplayer1.setMedia(content)
+        self.mediaplayer1.play()
+        self.mediaplayer1.setVideoOutput(self.videoStartMenu_1)
+
+        self.mediaplayer2.setMedia(content)
+        self.mediaplayer2.play()
+        self.mediaplayer2.setVideoOutput(self.videoStartMenu_2)
 
     def to_settings(self):  # Переходит в меню настроек
         windows.setCurrentIndex(2)
@@ -961,7 +972,7 @@ class Settings_Main(QMainWindow, Ui_MainWindow_settings):  # Доработат�
         self.saveButton.setStyleSheet("color: white; background-color: #082567;"
                                       "border-radius: 20px;")
 
-        self.radiopve.toggled.connect(self.changeP)
+        # self.radiopve.toggled.connect(self.changeP)
         self.radiopvp.toggled.connect(self.changeP)
         self.backButton.clicked.connect(self.to_start)
         self.saveButton.clicked.connect(self.to_save)
@@ -1051,9 +1062,7 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
     def new_map(self):  # Метод создаёт(обновляет) карту
         for i in range(self.boardMap.columnCount()):
             for j in range(self.boardMap.rowCount()):
-                cell = QTableWidgetItem(".")
-                cell.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                self.boardMap.setItem(i, j, cell)
+                self.boardMap.setItem(i, j, new_cell_dot())
         self.boardMap.resizeColumnsToContents()
         self.boardMap.resizeRowsToContents()
 
@@ -1084,7 +1093,7 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
     def start(self):
         """Если Игрок1 нажал кнопку,
         то Игрок2 начинает заполнять данные.
-        Иначе переходит в меню игры"""
+        Иначе начинает игру"""
         """if self.countL != 0 or self.countK != 0 or self.countE != 0 or self.countT != 0:
             self.error("You haven't set all the ships")
             return"""
@@ -1146,7 +1155,7 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
                         error = True
                         self.error()
                         break
-                    self.boardMap.setItem(c1, c2 + i, QTableWidgetItem("X"))
+                    self.boardMap.setItem(c1, c2 + i, new_cell_x())
                     if i == num:
                         self.map.shoot(c1, c2 + i, "sink")
                 else:
@@ -1154,7 +1163,7 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
                         error = True
                         self.error()
                         break
-                    self.boardMap.setItem(c1 + i, c2, QTableWidgetItem("X"))
+                    self.boardMap.setItem(c1 + i, c2, new_cell_x())
                     if i == num:
                         self.map.shoot(c1 + i, c2, 'sink')
             if not error:
@@ -1191,7 +1200,7 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
             except BaseException:
                 self.error()
 
-    def setEsminec(self):  # Создание Есминца
+    def setEsminec(self):  # Создание Эсминца
         if self.countE == 0:
             self.error("Ships ended")
             return
@@ -1212,7 +1221,7 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
         if ok and self.countT != 0:
             try:
                 if str(self.boardMap.item(*COORDS[coord.upper()]).text()) == ".":
-                    self.boardMap.setItem(*COORDS[coord.upper()], QTableWidgetItem("X"))
+                    self.boardMap.setItem(*COORDS[coord.upper()], new_cell_x())
                     self.map.shoot(*COORDS[coord.upper()], 'sink')
                     self.countT -= 1
                 else:
@@ -1242,13 +1251,13 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):  # дописать!
         self.initUI()
 
     def initUI(self):
-        self.courseButton.clicked.connect(self.course)
+        self.tableWidget.cellClicked[int, int].connect(self.course1)
+        self.tableWidget_2.cellClicked[int, int].connect(self.course2)
 
         self.board1Label.setPixmap(self.pixmap_your_green)
         self.board2Label.setPixmap(self.pixmap_enemy_red)
 
         self.vsLable.setPixmap(self.pixmap_vs)
-        self.courseButton.setStyleSheet("color: white; background-color: #082567;")
 
     def new_boards(self):
         for i in range(self.tableWidget.columnCount()):
@@ -1281,55 +1290,62 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):  # дописать!
     def info(self, text="Your coord is right"):  # Информационное табло
         QMessageBox.information(self, "INFO", text)
 
-    def course(self):  # Ход
+    def course1(self, c1, c2):
+        self.course(c1, c2, 1)
+
+    def course2(self, c1, c2):
+        self.course(c1, c2, 2)
+
+    def course(self, r, c, num):  # Ход
         if all(players[0].board[i][j] == 0 for i in range(10) for j in range(10)):
             self.info(f"WIN {self.turn}!")
             windows.setCurrentIndex(6)
             return
-        coord, ok = QInputDialog.getText(self, f'{self.turn}', 'Enter coord:\n'
-                                                               'Example: A7')
-        coord = coord.upper()
-        try:
-            if COORDS[coord]:
-                self.info()
-        except KeyError:
-            QMessageBox.critical(self, "ERROR", "Your coord isn't right")
+        if self.turn[-1] == '1' and num == 2 or self.turn[-1] == '2' and num == 1:
+            flag = True
+            coord = (r, c)
         else:
-            c1, c2 = COORDS[coord][0], COORDS[coord][1]
-            if self.dot_or_notdot(coord):
-                if any(self.hasOne(COORDS[coord], shift)
+            flag = False
+        if flag:
+            if self.dot_or_notdot((r, c)):
+                if any(self.hasOne((r, c), shift)
                        for shift in ((1, 0), (-1, 0), (0, 1), (0, -1))):
                     self.info("HIT!")
                     if self.turn[-1] == '1':
-                        self.map2.shoot(c1, c2, 'hit')
+                        self.map2.shoot(r, c, 'hit')
                     else:
-                        self.map1.shoot(c1, c2, 'hit')
-                    players[1].board[c1][c2] = 0
-                    self.course()
+                        self.map1.shoot(r, c, 'hit')
+                    players[1].board[r][c] = 0
                     return
                 else:
                     self.info("SINK!")
                     if self.turn[-1] == '1':
-                        self.map2.shoot(c1, c2, 'sink')
+                        self.map2.shoot(r, c, 'sink')
                     else:
-                        self.map1.shoot(c1, c2, 'sink')
-                    players[1].board[c1][c2] = 0
-                    self.course()
+                        self.map1.shoot(r, c, 'sink')
+                    players[1].board[r][c] = 0
                     return
             else:
                 self.info("MISS!")
                 if self.turn[-1] == '1':
-                    self.map2.shoot(c1, c2, 'miss')
+                    self.map2.shoot(r, c, 'miss')
                 else:
-                    self.map1.shoot(c1, c2, 'miss')
-            self.change_of_course()
+                    self.map1.shoot(r, c, 'miss')
+                self.change_of_course()
+        else:
+            QMessageBox.critical(self, "ERROR", "NOT YOUR TURN!")
 
     def dot_or_notdot(self, coord):  # Проверка попал, не попал
+        new_coord = None
+        for key, value in COORDS.items():
+            if value == coord:
+                new_coord = (key, value)
+                break
         con = sqlite3.connect("Players.db")
         cur = con.cursor()
         result = cur.execute(
-            f"""SELECT {coord[0]} FROM Player{players[1].who[-1]}
-            WHERE id={COORDS[coord][0] + 1}""").fetchone()
+            f"""SELECT {new_coord[0][0]} FROM Player{players[1].who[-1]}
+            WHERE id={new_coord[1][0] + 1}""").fetchone()
         if result[0] == "." or result[0] == "*":
             return False
         return True
@@ -1380,16 +1396,16 @@ class SeaMap:
 
     def shoot(self, row, col, result):
         if result == 'miss':
-            self.map.setItem(row, col, QTableWidgetItem("*"))
+            self.map.setItem(row, col, new_cell_mul())
         elif result == 'hit':
-            self.map.setItem(row, col, QTableWidgetItem("X"))
+            self.map.setItem(row, col, new_cell_x())
         elif result == 'sink':
             for i in range(row - 1, row + 2):
                 for j in range(col - 1, col + 2):
                     if 0 <= i < 10 and 0 <= j < 10:
                         if str(self.map.item(i, j).text()) == '.':
-                            self.map.setItem(i, j, QTableWidgetItem("*"))
-            self.map.setItem(row, col, QTableWidgetItem("X"))
+                            self.map.setItem(i, j, new_cell_mul())
+            self.map.setItem(row, col, new_cell_x())
             for j in range(10):
                 if str(self.map.item(row, j).text()) == 'X':
                     col = j
@@ -1397,7 +1413,7 @@ class SeaMap:
                         for u in range(col - 1, col + 2):
                             if 0 <= i < 10 and 0 <= u < 10:
                                 if str(self.map.item(i, u).text()) == '.':
-                                    self.map.setItem(i, u, QTableWidgetItem("*"))
+                                    self.map.setItem(i, u, new_cell_mul())
             for v in range(10):
                 if str(self.map.item(v, col).text()) == 'X':
                     row = v
@@ -1405,7 +1421,7 @@ class SeaMap:
                         for u in range(col - 1, col + 2):
                             if 0 <= v < 10 and 0 <= u < 10:
                                 if str(self.map.item(v, u).text()) == '.':
-                                    self.map.setItem(v, u, QTableWidgetItem('*'))
+                                    self.map.setItem(v, u, new_cell_mul())
 
 
 if __name__ == '__main__':  # Дописать
