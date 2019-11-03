@@ -6,8 +6,8 @@
             <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>961</width>
-                <height>550</height>
+                <width>960</width>
+                <height>540</height>
             </rect>
         </property>
         <property name="windowTitle">
@@ -31,17 +31,78 @@
                         </item>
                     </layout>
                 </item>
-                <item row="0" column="1" colspan="2">
+                <item row="0" column="2" colspan="2">
                     <widget class="QPushButton" name="readyButton">
                         <property name="font">
                             <font>
                                 <pointsize>24</pointsize>
                             </font>
                         </property>
+                        <property name="cursor">
+                            <cursorShape>PointingHandCursor</cursorShape>
+                        </property>
                         <property name="text">
                             <string>I am ready</string>
                         </property>
                     </widget>
+                </item>
+                <item row="1" column="3">
+                    <layout class="QVBoxLayout" name="verticalLayout_2">
+                        <item>
+                            <widget class="QPushButton" name="linkorButton">
+                                <property name="font">
+                                    <font>
+                                        <pointsize>10</pointsize>
+                                        <italic>false</italic>
+                                        <strikeout>false</strikeout>
+                                    </font>
+                                </property>
+                                <property name="text">
+                                    <string>Choose where to put</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item>
+                            <widget class="QPushButton" name="kreyserButton">
+                                <property name="font">
+                                    <font>
+                                        <pointsize>10</pointsize>
+                                        <italic>false</italic>
+                                    </font>
+                                </property>
+                                <property name="text">
+                                    <string>Choose where to put</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item>
+                            <widget class="QPushButton" name="esminecButton">
+                                <property name="font">
+                                    <font>
+                                        <pointsize>10</pointsize>
+                                        <italic>false</italic>
+                                    </font>
+                                </property>
+                                <property name="text">
+                                    <string>Choose where to put</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item>
+                            <widget class="QPushButton" name="torpedButton">
+                                <property name="font">
+                                    <font>
+                                        <pointsize>10</pointsize>
+                                        <italic>false</italic>
+                                        <strikeout>false</strikeout>
+                                    </font>
+                                </property>
+                                <property name="text">
+                                    <string>Choose where to put</string>
+                                </property>
+                            </widget>
+                        </item>
+                    </layout>
                 </item>
                 <item row="1" column="0">
                     <widget class="QTableWidget" name="boardMap">
@@ -160,7 +221,7 @@
                         </column>
                     </widget>
                 </item>
-                <item row="1" column="1">
+                <item row="1" column="2">
                     <layout class="QVBoxLayout" name="verticalLayout">
                         <item>
                             <widget class="QLabel" name="linkorImage">
@@ -192,63 +253,49 @@
                         </item>
                     </layout>
                 </item>
-                <item row="1" column="2">
-                    <layout class="QVBoxLayout" name="verticalLayout_2">
+                <item row="1" column="1">
+                    <layout class="QVBoxLayout" name="verticalLayout_3">
                         <item>
-                            <widget class="QPushButton" name="linkorButton">
-                                <property name="font">
-                                    <font>
-                                        <pointsize>10</pointsize>
-                                        <italic>false</italic>
-                                        <strikeout>false</strikeout>
-                                    </font>
-                                </property>
-                                <property name="text">
-                                    <string>Choose where to put</string>
+                            <widget class="QLCDNumber" name="lcdNumber">
+                                <property name="intValue" stdset="0">
+                                    <number>4</number>
                                 </property>
                             </widget>
                         </item>
                         <item>
-                            <widget class="QPushButton" name="kreyserButton">
-                                <property name="font">
-                                    <font>
-                                        <pointsize>10</pointsize>
-                                        <italic>false</italic>
-                                    </font>
-                                </property>
-                                <property name="text">
-                                    <string>Choose where to put</string>
+                            <widget class="QLCDNumber" name="lcdNumber_2">
+                                <property name="intValue" stdset="0">
+                                    <number>3</number>
                                 </property>
                             </widget>
                         </item>
                         <item>
-                            <widget class="QPushButton" name="esminecButton">
-                                <property name="font">
-                                    <font>
-                                        <pointsize>10</pointsize>
-                                        <italic>false</italic>
-                                    </font>
-                                </property>
-                                <property name="text">
-                                    <string>Choose where to put</string>
+                            <widget class="QLCDNumber" name="lcdNumber_3">
+                                <property name="intValue" stdset="0">
+                                    <number>2</number>
                                 </property>
                             </widget>
                         </item>
                         <item>
-                            <widget class="QPushButton" name="torpedButton">
-                                <property name="font">
-                                    <font>
-                                        <pointsize>10</pointsize>
-                                        <italic>false</italic>
-                                        <strikeout>false</strikeout>
-                                    </font>
-                                </property>
-                                <property name="text">
-                                    <string>Choose where to put</string>
+                            <widget class="QLCDNumber" name="lcdNumber_4">
+                                <property name="intValue" stdset="0">
+                                    <number>1</number>
                                 </property>
                             </widget>
                         </item>
                     </layout>
+                </item>
+                <item row="0" column="1">
+                    <widget class="QLabel" name="label">
+                        <property name="font">
+                            <font>
+                                <pointsize>8</pointsize>
+                            </font>
+                        </property>
+                        <property name="text">
+                            <string>Number of cells.</string>
+                        </property>
+                    </widget>
                 </item>
             </layout>
         </widget>
@@ -257,7 +304,7 @@
                 <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>961</width>
+                    <width>960</width>
                     <height>26</height>
                 </rect>
             </property>

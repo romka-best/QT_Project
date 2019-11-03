@@ -10,10 +10,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_mainWindow(object):
+class Ui_MainWindow_loading(object):
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
         mainWindow.resize(960, 540)
+        mainWindow.setCursor(QtGui.QCursor(QtCore.Qt.BusyCursor))
         self.centralwidget = QtWidgets.QWidget(mainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -23,11 +24,15 @@ class Ui_mainWindow(object):
         self.widget.setMinimumSize(QtCore.QSize(0, 0))
         self.widget.setObjectName("widget")
         self.verticalLayout.addWidget(self.widget)
+        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(spacerItem)
         self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
         self.progressBar.setMinimumSize(QtCore.QSize(0, 0))
         self.progressBar.setProperty("value", 0)
         self.progressBar.setObjectName("progressBar")
         self.verticalLayout.addWidget(self.progressBar)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(spacerItem1)
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         font = QtGui.QFont()
         font.setFamily("Elephant")

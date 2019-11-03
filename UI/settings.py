@@ -10,7 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_MainWindow(object):
+class Ui_MainWindow_settings(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(960, 540)
@@ -18,8 +18,6 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout_2.setObjectName("gridLayout_2")
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.gridLayout_2.addItem(spacerItem, 1, 0, 1, 1)
         self.gridLayout = QtWidgets.QGridLayout()
         self.gridLayout.setObjectName("gridLayout")
         self.comboBox = QtWidgets.QComboBox(self.centralwidget)
@@ -36,6 +34,7 @@ class Ui_MainWindow(object):
         font.setItalic(False)
         font.setWeight(75)
         self.saveButton.setFont(font)
+        self.saveButton.setCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
         self.saveButton.setObjectName("saveButton")
         self.gridLayout.addWidget(self.saveButton, 3, 0, 1, 1)
         self.radiopvp = QtWidgets.QRadioButton(self.centralwidget)
@@ -45,22 +44,21 @@ class Ui_MainWindow(object):
         self.radiopvp.setChecked(True)
         self.radiopvp.setObjectName("radiopvp")
         self.gridLayout.addWidget(self.radiopvp, 0, 0, 1, 1)
-        self.gridLayout_2.addLayout(self.gridLayout, 2, 1, 2, 1)
-        self.logoImage = QtWidgets.QLabel(self.centralwidget)
-        self.logoImage.setText("")
-        self.logoImage.setObjectName("logoImage")
-        self.gridLayout_2.addWidget(self.logoImage, 0, 1, 1, 1)
+        self.gridLayout_2.addLayout(self.gridLayout, 1, 1, 2, 1)
         self.backButton = QtWidgets.QPushButton(self.centralwidget)
         font = QtGui.QFont()
         font.setPointSize(24)
         self.backButton.setFont(font)
         self.backButton.setObjectName("backButton")
         self.gridLayout_2.addWidget(self.backButton, 0, 0, 1, 1)
-        self.videoSettings = QVideoWidget(self.centralwidget)
-        self.videoSettings.setObjectName("videoSettings")
-        self.gridLayout_2.addWidget(self.videoSettings, 3, 0, 1, 1)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.gridLayout_2.addItem(spacerItem1, 4, 1, 1, 1)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout_2.addItem(spacerItem, 1, 2, 1, 1)
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout_2.addItem(spacerItem1, 1, 0, 1, 1)
+        self.logoImage = QtWidgets.QLabel(self.centralwidget)
+        self.logoImage.setText("")
+        self.logoImage.setObjectName("logoImage")
+        self.gridLayout_2.addWidget(self.logoImage, 0, 1, 1, 2)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -73,4 +71,3 @@ class Ui_MainWindow(object):
         self.saveButton.setText(_translate("MainWindow", "SAVE"))
         self.radiopvp.setText(_translate("MainWindow", "PVP"))
         self.backButton.setText(_translate("MainWindow", "<----- Back"))
-from PyQt5.QtMultimediaWidgets import QVideoWidget

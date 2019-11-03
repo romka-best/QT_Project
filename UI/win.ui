@@ -15,13 +15,32 @@
         </property>
         <widget class="QWidget" name="centralwidget">
             <layout class="QVBoxLayout" name="verticalLayout">
-                <item>
-                    <widget class="QVideoWidget" name="widget" native="true"/>
-                </item>
-                <item>
-                    <widget class="QLabel" name="label">
+                <item alignment="Qt::AlignHCenter">
+                    <widget class="QLabel" name="label_2">
                         <property name="text">
                             <string/>
+                        </property>
+                    </widget>
+                </item>
+                <item alignment="Qt::AlignHCenter">
+                    <widget class="QLabel" name="label">
+                        <property name="font">
+                            <font>
+                                <pointsize>60</pointsize>
+                                <weight>75</weight>
+                                <italic>false</italic>
+                                <bold>true</bold>
+                                <underline>false</underline>
+                            </font>
+                        </property>
+                        <property name="cursor">
+                            <cursorShape>ArrowCursor</cursorShape>
+                        </property>
+                        <property name="text">
+                            <string>CONGRULATIONS!</string>
+                        </property>
+                        <property name="alignment">
+                            <set>Qt::AlignCenter</set>
                         </property>
                     </widget>
                 </item>
@@ -34,6 +53,9 @@
                                 <bold>true</bold>
                             </font>
                         </property>
+                        <property name="cursor">
+                            <cursorShape>WhatsThisCursor</cursorShape>
+                        </property>
                         <property name="text">
                             <string>EXIT</string>
                         </property>
@@ -42,14 +64,6 @@
             </layout>
         </widget>
     </widget>
-    <customwidgets>
-        <customwidget>
-            <class>QVideoWidget</class>
-            <extends>QWidget</extends>
-            <header>PyQt5.QtMultimediaWidgets</header>
-            <container>1</container>
-        </customwidget>
-    </customwidgets>
     <resources/>
     <connections/>
 </ui>
