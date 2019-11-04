@@ -14,11 +14,9 @@ from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import QBasicTimer, QCoreApplication
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, \
-    QStackedWidget, QMessageBox, QInputDialog, QTableWidgetItem
-from PyQt5 import QtCore, QtGui, QtWidgets
-
-from PyQt5.QtMultimediaWidgets import QVideoWidget
-from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer, QMediaPlaylist
+    QStackedWidget, QMessageBox, QInputDialog, QTableWidgetItem, QAction
+from PyQt5 import QtCore, QtGui
+from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer, QSound
 
 SCREEN_SIZE = [(960, 540), (1280, 720), (1920, 1080)]
 COORDS = {
@@ -124,36 +122,43 @@ COORDS = {
     "J10": (9, 9),
 }
 players = []
+NOTES = {
+    'warning': QSound("sounds/warning.wav"),
+    'background': QSound("sounds/background.wav"),
+    'hit': QSound("sounds/hit.wav"),
+    'miss': QSound("sounds/miss.wav"),
+    'main_sound': QSound("sounds/main_sound.wav"),
+    'win': QSound("sounds/win.wav")
+}
 
 """
 Код не до конца оптимизирован
-Проект готов на 95%
-Доработать layouts"""
+Проект готов на 99%"""
 
 
-def new_cell_mul():
+def new_cell_mul():  # Когда ставлю звёздочку в QTableWidget
     cell_mul = QTableWidgetItem("*")
     cell_mul.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
     return cell_mul
 
 
-def new_cell_x():
+def new_cell_x():  # Когда ставлю крестик в QTableWidget
     cell_x = QTableWidgetItem("X")
     cell_x.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
     return cell_x
 
 
-def new_cell_dot():
+def new_cell_dot():  # Когда ставлю точку в QTableWidget
     cell_dot = QTableWidgetItem(".")
     cell_dot.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
     return cell_dot
 
 
-class Loading_Main(QMainWindow, Ui_MainWindow_loading):
+class LoadingMain(QMainWindow, Ui_MainWindow_loading):
     """Псевдозагрузочная анимация, но в дальнейшем данное умение пригодится"""
 
     def __init__(self, parent=None):
-        super(Loading_Main, self).__init__(parent)
+        super(LoadingMain, self).__init__(parent)
         self.setupUi(self)
         self.mediaplayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
         self.timer = QBasicTimer()
@@ -163,6 +168,7 @@ class Loading_Main(QMainWindow, Ui_MainWindow_loading):
     def initUI(self):
         self.load_mp4("videos/animation.gif")
         self.pushButton.clicked.connect(self.doAction)
+        # При наведении на кнопку курсор поменяется
         self.pushButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 
     def load_mp4(self, filename):  # Загружаю ГИФ-файл
@@ -172,10 +178,14 @@ class Loading_Main(QMainWindow, Ui_MainWindow_loading):
         self.mediaplayer.play()
         self.mediaplayer.setVideoOutput(self.widget)
 
+    def load_mp3(self, filename):  # Загружаю звук
+        NOTES[filename].play()
+
     def timerEvent(self, e):  # Загрузка
         if self.step >= 100:
             self.timer.stop()
             self.pushButton.setText('Finished')
+            self.load_mp3("main_sound")
             windows.setCurrentIndex(1)
             return
 
@@ -186,23 +196,26 @@ class Loading_Main(QMainWindow, Ui_MainWindow_loading):
         if self.timer.isActive():
             self.timer.stop()
             self.pushButton.setText('BEST PRODUCTIONS')
+            # При наведении на кнопку курсор поменяется
             self.setCursor(QtGui.QCursor(QtCore.Qt.BusyCursor))
         else:
             self.timer.start(100, self)
             self.pushButton.setText('Stop')
+            # При наведении на кнопку курсор поменяется
             self.setCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
 
 
-class Startmenu_Main(QMainWindow, Ui_MainWindow_startmenu):
+class StartMenuMain(QMainWindow, Ui_MainWindow_startmenu):
     """Стартовое меню, где можно переключаться между окнами, а также выйти из игры"""
 
     def __init__(self, parent=None):
-        super(Startmenu_Main, self).__init__(parent)
+        super(StartMenuMain, self).__init__(parent)
         self.setupUi(self)
 
-        self.LOGOBP = QPixmap("images/logobp.svg")
-        self.LOGOSB = QPixmap("images/logosb.svg")
+        self.LOGOBP = QPixmap("images/logobp.svg")  # Картинка логотипа "кампании"
+        self.LOGOSB = QPixmap("images/logosb.svg")  # Картинка логотипа игры
         self.mediaplayer1 = QMediaPlayer(None, QMediaPlayer.VideoSurface)
+        self.SOUND = True  # по умолчанию звук включён
 
         self.initUI()
 
@@ -210,7 +223,17 @@ class Startmenu_Main(QMainWindow, Ui_MainWindow_startmenu):
         self.logoImage1.setPixmap(self.LOGOBP)
         self.label.setPixmap(self.LOGOSB)
 
-        self.load_mp4("videos/animation800.gif")
+        self.load_mp4("videos/animation800.gif")  # Загружаю гифку
+        self.load_mp3("background")  # Загружаю звук
+
+        # Добавляю тулбар, возможность включать/выключать звук
+        self.soundAction = QAction(QIcon('images/microphone.svg'),
+                                   'Turn on / Turn off', self)
+        self.soundAction.setShortcut('Ctrl+M')
+        self.soundAction.triggered.connect(self.to_sound)
+
+        self.toolbar = self.addToolBar('Sound')
+        self.toolbar.addAction(self.soundAction)
 
         # Задаю цвет кнопкам
         self.startButton.setStyleSheet("color: white; background-color: #082567;"
@@ -227,6 +250,7 @@ class Startmenu_Main(QMainWindow, Ui_MainWindow_startmenu):
         self.exitButton.clicked.connect(QCoreApplication.instance().quit)
         self.settingsButton.clicked.connect(self.to_settings)
 
+        # Подсказки, при наведении курсора на кнопки/изображения
         self.logoImage1.setToolTip("<b>Best Productions</b>")
         self.label.setToolTip("<b>SEA BATTLE</b>/ BATTLESHIP")
         self.videoStartMenu_1.setToolTip("Animation")
@@ -235,10 +259,27 @@ class Startmenu_Main(QMainWindow, Ui_MainWindow_startmenu):
         self.settingsButton.setToolTip("Change <b>Settings</b>")
         self.exitButton.setToolTip("<b>Exit</b> to Windows/Linux/MacOS")
 
+        # При наведении на кнопки, курсор меняется
         self.startButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.rulesButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.settingsButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.exitButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+
+    def to_sound(self):  # Включение/отключение звука
+        if self.SOUND:
+            self.soundAction.setIcon(QIcon("images/muted.svg"))
+            self.SOUND = False
+            self.load_mp3('background')
+        else:
+            self.soundAction.setIcon(QIcon("images/microphone.svg"))
+            self.SOUND = True
+            self.load_mp3('background')
+
+    def load_mp3(self, filename, param=False):  # Загрузка WAV-файла
+        if not self.SOUND or param:
+            NOTES[filename].stop()
+        elif self.SOUND:
+            NOTES[filename].play()
 
     def load_mp4(self, filename):  # Загрузка GIF-файла
         media = QtCore.QUrl.fromLocalFile(filename)
@@ -249,20 +290,24 @@ class Startmenu_Main(QMainWindow, Ui_MainWindow_startmenu):
         self.mediaplayer1.setVideoOutput(self.videoStartMenu_1)
 
     def to_settings(self):  # Переходит в меню настроек
+        self.load_mp3("main_sound")
         windows.setCurrentIndex(2)
 
     def to_rules(self):  # Переходит в меню правил
+        self.load_mp3("main_sound")
         windows.setCurrentIndex(3)
 
     def to_start(self):  # Переходит в меню начала игры
+        self.load_mp3("main_sound")
+        self.load_mp3("background", param=True)
         windows.setCurrentIndex(4)
 
 
-class Settings_Main(QMainWindow, Ui_MainWindow_settings):
+class SettingsMain(QMainWindow, Ui_MainWindow_settings):
     """Меню настроек, где можно изменить режим игры, а также сменить язык"""
 
     def __init__(self, parent=None):
-        super(Settings_Main, self).__init__(parent)
+        super(SettingsMain, self).__init__(parent)
         self.setupUi(self)
         self.initUI()
 
@@ -289,7 +334,15 @@ class Settings_Main(QMainWindow, Ui_MainWindow_settings):
 
         self.backButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 
+    def load_mp3(self, filename, param=False):  # Загрузка WAV-файла
+        if not self.SOUND or param:
+            NOTES[filename].stop()
+        elif self.SOUND:
+            NOTES[filename].play()
+
     def to_start(self):  # Переход в стартовое меню
+        self.SOUND = startmenu_window.SOUND
+        self.load_mp3('main_sound')
         windows.setCurrentIndex(1)
 
     def to_save(self):  # Сохраняет изменения
@@ -303,11 +356,11 @@ class Settings_Main(QMainWindow, Ui_MainWindow_settings):
         pass
 
 
-class Rules_Main(QMainWindow, Ui_MainWindow_rules):
+class RulesMain(QMainWindow, Ui_MainWindow_rules):
     """Меню правил"""
 
     def __init__(self, parent=None):
-        super(Rules_Main, self).__init__(parent)
+        super(RulesMain, self).__init__(parent)
         self.setupUi(self)
         self.LOGOSB = QPixmap("images/logosb.svg")
         self.initUI()
@@ -342,15 +395,23 @@ class Rules_Main(QMainWindow, Ui_MainWindow_rules):
 
         self.backButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 
+    def load_mp3(self, filename, param=False):
+        if not self.SOUND or param:
+            NOTES[filename].stop()
+        elif self.SOUND:
+            NOTES[filename].play()
+
     def to_start(self):  # Переход в стартовое меню
+        self.SOUND = startmenu_window.SOUND
+        self.load_mp3("main_sound")
         windows.setCurrentIndex(1)
 
 
-class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изображения, оптимизировать код
+class ReadyMain(QMainWindow, Ui_MainWindow_ready):
     """Меню подготовления к самой игре"""
 
     def __init__(self, parent=None):
-        super(Ready_Main, self).__init__(parent)
+        super(ReadyMain, self).__init__(parent)
         self.setupUi(self)
 
         self.map = SeaMap(self.boardMap)
@@ -380,17 +441,25 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
         self.esminecButton.clicked.connect(self.setEsminec)
         self.torpedButton.clicked.connect(self.setTorped)
 
+        # При наведении меняется курсор
         self.linkorButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.kreyserButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.esminecButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.torpedButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 
+        # Подсказки
         self.linkorImage.setToolTip("<b>Battleship</b>")
         self.kreyserImage.setToolTip("<b>Cruiser</b>")
         self.esminecImage.setToolTip("<b>Destroyer</b>")
         self.torpedImage.setToolTip("<b>Torpedo boat</b>")
         self.readyButton.setToolTip("The choice of the <b>other player</b>/<b>Start</b> the game.")
         self.boardMap.setToolTip("This is your board")
+
+    def load_mp3(self, filename, param=False):
+        if not self.SOUND or param:
+            NOTES[filename].stop()
+        elif self.SOUND:
+            NOTES[filename].play()
 
     def new_map(self):  # Метод создаёт(обновляет) карту
         for i in range(self.boardMap.columnCount()):
@@ -427,9 +496,10 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
         """Если Игрок1 нажал кнопку,
         то Игрок2 начинает заполнять данные.
         Иначе начинает игру"""
-        """if self.countL != 0 or self.countK != 0 or self.countE != 0 or self.countT != 0:
+        # Проверка, все ли корабли поставлены
+        if self.countL != 0 or self.countK != 0 or self.countE != 0 or self.countT != 0:
             self.error("You haven't set all the ships")
-            return"""
+            return
         if self.sender().text() == 'I am ready':
             self.new_db("Player1")
             players.append(Player('Player1', self.boardMap))  # Добавление в список игрока
@@ -438,9 +508,13 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
             self.new_count()  # Обновление переменных-счётчиков
             self.new_map()  # Обновление карты
             self.new_images('red')  # Обновление изображений
+            self.SOUND = startmenu_window.SOUND
+            self.load_mp3("main_sound")
         else:
             self.new_db("Player2")
             players.append(Player('Player2', self.boardMap))  # Добавление в список игрока
+            self.SOUND = startmenu_window.SOUND
+            self.load_mp3("main_sound")
             windows.setCurrentIndex(5)
 
     def new_count(self):  # Создание(обновление) переменных-счётчиков
@@ -515,6 +589,25 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
                     self.esminecButton.setToolTip(f"{self.countE} left")
         else:
             self.error()
+        self.is_null()
+
+    def is_null(self):
+        if self.countL == 0:
+            self.pixmap_linkor = QPixmap(f"images/Linkor_white.svg")
+            self.pixmap_linkor = self.pixmap_linkor.scaled(259, 110)
+            self.linkorImage.setPixmap(self.pixmap_linkor)
+        if self.countK == 0:
+            self.pixmap_kreyser = QPixmap(f"images/Kreyser_white.svg")
+            self.pixmap_kreyser = self.pixmap_kreyser.scaled(259, 110)
+            self.kreyserImage.setPixmap(self.pixmap_kreyser)
+        if self.countE == 0:
+            self.pixmap_esminec = QPixmap(f"images/Esminec_white.svg")
+            self.pixmap_esminec = self.pixmap_esminec.scaled(259, 110)
+            self.esminecImage.setPixmap(self.pixmap_esminec)
+        if self.countT == 0:
+            self.pixmap_torped = QPixmap(f"images/Torped_white.svg")
+            self.pixmap_torped = self.pixmap_torped.scaled(259, 110)
+            self.torpedImage.setPixmap(self.pixmap_torped)
 
     def setLinkor(self):  # Создание Линкора
         if self.countL == 0:
@@ -567,13 +660,14 @@ class Ready_Main(QMainWindow, Ui_MainWindow_ready):  # Вставить изоб
                     self.torpedButton.setToolTip(f"{self.countT} left")
                 else:
                     self.error()
+                self.is_null()
             except BaseException:
                 self.error()
 
 
-class PVP_Main(QMainWindow, Ui_MainWindow_pvp):
+class PVPMain(QMainWindow, Ui_MainWindow_pvp):
     def __init__(self, parent=None):
-        super(PVP_Main, self).__init__(parent)
+        super(PVPMain, self).__init__(parent)
         self.setupUi(self)
 
         self.pixmap_your_green = QPixmap("images/your_board_green.svg")
@@ -581,8 +675,25 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):
         self.pixmap_enemy_green = QPixmap("images/enemys_board_green.svg")
         self.pixmap_enemy_red = QPixmap("images/enemys_board_red.svg")
         self.pixmap_vs = QPixmap("images/vs.svg")
+        self.pixmap_linkor_red = QPixmap(f"images/Linkor_red.svg")
+        self.pixmap_kreyser_red = QPixmap(f"images/Kreyser_red.svg")
+        self.pixmap_esminec_red = QPixmap(f"images/Esminec_red.svg")
+        self.pixmap_torped_red = QPixmap(f"images/Torped_red.svg")
+        self.pixmap_linkor_green = QPixmap(f"images/Linkor_green.svg")
+        self.pixmap_kreyser_green = QPixmap(f"images/Kreyser_green.svg")
+        self.pixmap_esminec_green = QPixmap(f"images/Esminec_green.svg")
+        self.pixmap_torped_green = QPixmap(f"images/Torped_green.svg")
+        self.pixmap_linkor_green = self.pixmap_linkor_green.scaled(60, 30)
+        self.pixmap_kreyser_green = self.pixmap_kreyser_green.scaled(60, 30)
+        self.pixmap_esminec_green = self.pixmap_esminec_green.scaled(60, 30)
+        self.pixmap_torped_green = self.pixmap_torped_green.scaled(60, 30)
+        self.pixmap_linkor_red = self.pixmap_linkor_red.scaled(60, 30)
+        self.pixmap_kreyser_red = self.pixmap_kreyser_red.scaled(60, 30)
+        self.pixmap_esminec_red = self.pixmap_esminec_red.scaled(60, 30)
+        self.pixmap_torped_red = self.pixmap_torped_red.scaled(60, 30)
 
         self.turn = "Player1"  # Очередь первого игрока
+        # Подсказки
         self.tableWidget.setToolTip("Your board")
         self.tableWidget_2.setToolTip("Not your board")
 
@@ -601,6 +712,21 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):
         self.board2Label.setPixmap(self.pixmap_enemy_red)
 
         self.vsLable.setPixmap(self.pixmap_vs)
+
+        self.linkorP1.setPixmap(self.pixmap_linkor_green)
+        self.kreyserP1.setPixmap(self.pixmap_kreyser_green)
+        self.esminecP1.setPixmap(self.pixmap_esminec_green)
+        self.torpedP1.setPixmap(self.pixmap_torped_green)
+        self.linkorP2.setPixmap(self.pixmap_linkor_red)
+        self.kreyserP2.setPixmap(self.pixmap_kreyser_red)
+        self.esminecP2.setPixmap(self.pixmap_esminec_red)
+        self.torpedP2.setPixmap(self.pixmap_torped_red)
+
+    def load_mp3(self, filename, param=False):
+        if not self.SOUND or param:
+            NOTES[filename].stop()
+        elif self.SOUND:
+            NOTES[filename].play()
 
     def new_boards(self):
         for i in range(self.tableWidget.columnCount()):
@@ -633,6 +759,14 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):
     def info(self, text="Your coord is right"):  # Информационное табло
         QMessageBox.information(self, "INFO", text)
 
+    def check(self):
+        if all(players[1].board[i][j] == 0 for i in range(10) for j in range(10)):
+            self.info(f"WIN {self.turn}!")
+            self.SOUND = startmenu_window.SOUND
+            self.load_mp3("win")
+            windows.setCurrentIndex(6)
+            return
+
     def course1(self, c1, c2):
         self.course(c1, c2, 1)
 
@@ -640,10 +774,6 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):
         self.course(c1, c2, 2)
 
     def course(self, r, c, num):  # Ход
-        if all(players[0].board[i][j] == 0 for i in range(10) for j in range(10)):
-            self.info(f"WIN {self.turn}!")
-            windows.setCurrentIndex(6)
-            return
         if self.turn[-1] == '1' and num == 2 or self.turn[-1] == '2' and num == 1:
             flag = True
             coord = (r, c)
@@ -659,7 +789,8 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):
                     else:
                         self.map1.shoot(r, c, 'hit')
                     players[1].board[r][c] = 0
-                    return
+                    self.SOUND = startmenu_window.SOUND
+                    self.load_mp3("hit")
                 else:
                     self.info("SINK!")
                     if self.turn[-1] == '1':
@@ -667,13 +798,17 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):
                     else:
                         self.map1.shoot(r, c, 'sink')
                     players[1].board[r][c] = 0
-                    return
+                    self.SOUND = startmenu_window.SOUND
+                    self.load_mp3("warning")
+                    self.check()
             else:
                 self.info("MISS!")
                 if self.turn[-1] == '1':
                     self.map2.shoot(r, c, 'miss')
                 else:
                     self.map1.shoot(r, c, 'miss')
+                self.SOUND = startmenu_window.SOUND
+                self.load_mp3("miss")
                 self.change_of_course()
         else:
             QMessageBox.critical(self, "ERROR", "NOT YOUR TURN!")
@@ -704,11 +839,11 @@ class PVP_Main(QMainWindow, Ui_MainWindow_pvp):
         return False
 
 
-class Win_Main(QMainWindow, Ui_MainWindow_win):  # Дописать
+class WinMain(QMainWindow, Ui_MainWindow_win):  # Дописать
     """Меню выиграша"""
 
     def __init__(self, parent=None):
-        super(Win_Main, self).__init__(parent)
+        super(WinMain, self).__init__(parent)
         self.setupUi(self)
         self.LOGOSB = QPixmap("images/logosb.svg")
         self.initUI()
@@ -772,13 +907,13 @@ class SeaMap:
 if __name__ == '__main__':  # Дописать
     app = QApplication(sys.argv)
 
-    loading_window = Loading_Main()
-    startmenu_window = Startmenu_Main()
-    settings_window = Settings_Main()
-    rules_window = Rules_Main()
-    ready_window = Ready_Main()
-    pvp_window = PVP_Main()
-    win_window = Win_Main()
+    loading_window = LoadingMain()
+    startmenu_window = StartMenuMain()
+    settings_window = SettingsMain()
+    rules_window = RulesMain()
+    ready_window = ReadyMain()
+    pvp_window = PVPMain()
+    win_window = WinMain()
 
     windows = QStackedWidget()
     windows.addWidget(loading_window)  # 0
@@ -791,6 +926,6 @@ if __name__ == '__main__':  # Дописать
 
     windows.setWindowTitle("SEA BATTLE")
     windows.setWindowIcon(QIcon("images/icon.svg"))
-    # windows.resize(*SCREEN_SIZE[0])
+    windows.resize(*SCREEN_SIZE[0])
     windows.show()
     sys.exit(app.exec())
