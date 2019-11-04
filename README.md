@@ -19,6 +19,7 @@ My project with PyQT5
 <li>PyCharm</li>
 <li>QT Designer</li>
 <li>SQLite Studio</li>
+ <li>Adobe Illustartor</li>
 <li>Yandex Browser</li>
 </ol></p>
 <h2>[ ЭТАПЫ РАЗРАБОТКИ ]</h2>
