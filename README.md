@@ -13,7 +13,7 @@ My project with PyQT5
 <p>Продукт разрабатывается под систему Windows</p>
 <p>В системе должен быть установлен Python 3.7, а также библиотеки PyQT5, sqlite</p>
 <h2>[ ПОХОЖИЕ / АНАЛОГИЧНЫЕ ПРОДУКТЫ ]</h2>
-<p></p>
+<p>https://play.google.com/store/apps/details?id=com.byril.seabattle&hl=ru</p>
 <h2>[ ИНСТРУМЕНТЫ РАЗРАБОТКИ ]</h2>
 <p><ol>
 <li>PyCharm</li>
