@@ -131,10 +131,6 @@ NOTES = {
     'win': QSound("sounds/win.wav")
 }
 
-"""
-Код не до конца оптимизирован
-Проект готов на 99%"""
-
 
 def new_cell_mul():  # Когда ставлю звёздочку в QTableWidget
     cell_mul = QTableWidgetItem("*")
@@ -155,7 +151,7 @@ def new_cell_dot():  # Когда ставлю точку в QTableWidget
 
 
 class LoadingMain(QMainWindow, Ui_MainWindow_loading):
-    """Псевдозагрузочная анимация, но в дальнейшем данное умение пригодится"""
+    """Псевдозагрузочная анимация"""
 
     def __init__(self, parent=None):
         super(LoadingMain, self).__init__(parent)
@@ -167,7 +163,7 @@ class LoadingMain(QMainWindow, Ui_MainWindow_loading):
 
     def initUI(self):
         self.load_mp4("videos/animation.gif")
-        self.pushButton.clicked.connect(self.doAction)
+        self.pushButton.clicked.connect(self.do_action)
         # При наведении на кнопку курсор поменяется
         self.pushButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 
@@ -192,7 +188,7 @@ class LoadingMain(QMainWindow, Ui_MainWindow_loading):
         self.step = self.step + randrange(0, 10)
         self.progressBar.setValue(self.step)
 
-    def doAction(self):  # Если пользователь нажимает кнопку
+    def do_action(self):  # Если пользователь нажимает кнопку
         if self.timer.isActive():
             self.timer.stop()
             self.pushButton.setText('BEST PRODUCTIONS')
@@ -436,10 +432,10 @@ class ReadyMain(QMainWindow, Ui_MainWindow_ready):
         self.torpedButton.setStyleSheet("color: white; background-color: #082567;"
                                         "border-radius: 10px;")
 
-        self.linkorButton.clicked.connect(self.setLinkor)
-        self.kreyserButton.clicked.connect(self.setKreyser)
-        self.esminecButton.clicked.connect(self.setEsminec)
-        self.torpedButton.clicked.connect(self.setTorped)
+        self.linkorButton.clicked.connect(self.set_linkor)
+        self.kreyserButton.clicked.connect(self.set_kreyser)
+        self.esminecButton.clicked.connect(self.set_esminec)
+        self.torpedButton.clicked.connect(self.set_torped)
 
         # При наведении меняется курсор
         self.linkorButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
@@ -551,7 +547,7 @@ class ReadyMain(QMainWindow, Ui_MainWindow_ready):
     def error(self, text="You entered the coordinates incorrectly."):  # Вызов ошибки
         QMessageBox.critical(self, 'ERROR!', text)
 
-    def setShip(self, coords, num, who):  # Создание любого корабля на поле
+    def set_ship(self, coords, num, who):  # Создание любого корабля на поле
         error = False
         new_coords = coords.split('-')
         if self.coords_is_right(new_coords, num):
@@ -609,7 +605,7 @@ class ReadyMain(QMainWindow, Ui_MainWindow_ready):
             self.pixmap_torped = self.pixmap_torped.scaled(259, 110)
             self.torpedImage.setPixmap(self.pixmap_torped)
 
-    def setLinkor(self):  # Создание Линкора
+    def set_linkor(self):  # Создание Линкора
         if self.countL == 0:
             self.error("Ships ended")
             return
@@ -617,11 +613,11 @@ class ReadyMain(QMainWindow, Ui_MainWindow_ready):
                                                                        'Example: A1-D1')
         if ok and self.countL != 0:
             try:
-                self.setShip(coords, 3, "L")
+                self.set_ship(coords, 3, "L")
             except BaseException:
                 self.error()
 
-    def setKreyser(self):  # Создание Крейсера
+    def set_kreyser(self):  # Создание Крейсера
         if self.countK == 0:
             self.error("Ships ended")
             return
@@ -629,11 +625,11 @@ class ReadyMain(QMainWindow, Ui_MainWindow_ready):
                                                                        'Example: A3-C3')
         if ok and self.countK != 0:
             try:
-                self.setShip(coords, 2, "K")
+                self.set_ship(coords, 2, "K")
             except BaseException:
                 self.error()
 
-    def setEsminec(self):  # Создание Эсминца
+    def set_esminec(self):  # Создание Эсминца
         if self.countE == 0:
             self.error("Ships ended")
             return
@@ -641,11 +637,11 @@ class ReadyMain(QMainWindow, Ui_MainWindow_ready):
                                                                        'Example: A5-B5')
         if ok and self.countE != 0:
             try:
-                self.setShip(coords, 1, "E")
+                self.set_ship(coords, 1, "E")
             except BaseException:
                 self.error()
 
-    def setTorped(self):  # Создание торпедной лодки
+    def set_torped(self):  # Создание торпедной лодки
         if self.countT == 0:
             self.error("Ships ended")
             return
@@ -780,8 +776,8 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
         else:
             flag = False
         if flag:
-            if self.dot_or_notdot((r, c)):
-                if any(self.hasOne((r, c), shift)
+            if self.is_dot((r, c)):
+                if any(self.has_one((r, c), shift)
                        for shift in ((1, 0), (-1, 0), (0, 1), (0, -1))):
                     self.info("HIT!")
                     if self.turn[-1] == '1':
@@ -813,7 +809,7 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
         else:
             QMessageBox.critical(self, "ERROR", "NOT YOUR TURN!")
 
-    def dot_or_notdot(self, coord):  # Проверка попал, не попал
+    def is_dot(self, coord):  # Проверка попал, не попал
         new_coord = None
         for key, value in COORDS.items():
             if value == coord:
@@ -824,11 +820,9 @@ class PVPMain(QMainWindow, Ui_MainWindow_pvp):
         result = cur.execute(
             f"""SELECT {new_coord[0][0]} FROM Player{players[1].who[-1]}
             WHERE id={new_coord[1][0] + 1}""").fetchone()
-        if result[0] == "." or result[0] == "*":
-            return False
-        return True
+        return not (result[0] == "." or result[0] == "*")
 
-    def hasOne(self, pos, shift):  # Проверка, потопил или ранил
+    def has_one(self, pos, shift):  # Проверка, потопил или ранил
         x, y = pos
         dx, dy = shift
         x += dx
